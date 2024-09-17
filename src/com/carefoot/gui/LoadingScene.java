@@ -10,20 +10,19 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
 
-public class LoadingScene {
+public class LoadingScene extends PPScene {
 	
-	private Scene scene;
-	private final String SPINNER_FILE = "loading_spinner.png";
+	private static final String SPINNER_FILE = "loading_spinner.png";
 	
 	public LoadingScene() {
-		this.scene = new Scene(assembleContent(), 500d, 500d);
+		super(new Scene(assembleContent(), 500d, 500d));
 //		scene.getStylesheets().add(getClass().getClassLoader().getResource("loading.css").getPath());
 	}
 	
-	private Parent assembleContent() {
+	private static Parent assembleContent() {
 		StackPane sp = new StackPane();
 
-		Image img = new Image(getClass().getClassLoader().getResourceAsStream(SPINNER_FILE));
+		Image img = new Image(LoadingScene.class.getClassLoader().getResourceAsStream(SPINNER_FILE));
 		ImageView spinner = new ImageView(img);
 		spinner.setPreserveRatio(true);
 		spinner.setFitHeight(60d);
@@ -34,16 +33,11 @@ public class LoadingScene {
 		return sp;
 	}
 	
-	private void rotate(Node node) {
+	private static void rotate(Node node) {
 		RotateTransition rt = new RotateTransition(Duration.millis(1100), node);
 		rt.setDelay(Duration.ZERO);
 		rt.setByAngle(360);
 		rt.setCycleCount(Animation.INDEFINITE);
 		rt.play();
 	}
-	
-	public Scene scene() {
-		return this.scene;
-	}
-
 }
