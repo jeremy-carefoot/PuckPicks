@@ -9,6 +9,7 @@ public class PPApplication {
 	
 	public PPApplication(Stage stage) {
 		this.stage = stage;
+		setTitle("PuckPicks");
 	}
 	
 	// Shows window

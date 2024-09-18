@@ -1,5 +1,7 @@
 package com.carefoot.puckpicks.main;
 
+import com.carefoot.puckpicks.data.DataManager;
+import com.carefoot.puckpicks.data.SkaterRequest;
 import com.carefoot.puckpicks.gui.LoadingScene;
 import com.carefoot.puckpicks.gui.PPApplication;
 
@@ -14,11 +16,18 @@ public class AppLauncher extends Application {
 		LoadingScene loading = new LoadingScene();
 		app.setScene(loading);
 		app.open();
+		
+		debug();
 	}
 	
 	// Main method
 	public static void main(String[] args) {
 		launch(args);
+	}
+	
+	private void debug() {		
+		DataManager dm = new DataManager();
+		System.out.println(dm.submitRequest(new SkaterRequest("assists", 50)));
 	}
 
 }
