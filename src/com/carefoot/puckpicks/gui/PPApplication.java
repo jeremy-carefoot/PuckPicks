@@ -1,4 +1,4 @@
-package com.carefoot.gui;
+package com.carefoot.puckpicks.gui;
 
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -27,8 +27,8 @@ public class PPApplication {
 	}
 
 	// Sets a new scene
-	public void setScene(Scene scene) {
-		stage.setScene(scene);
+	public void setScene(PPScene scene) {
+		stage.setScene(scene.scene());
 	}
 	
 	public String getTitle() {

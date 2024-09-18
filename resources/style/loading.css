@@ -1,0 +1,8 @@
+.root {
+	-fx-background-color: rgb(224, 255, 254);
+}
+
+#load-status {
+	-fx-font-size: 16px;
+	-fx-fill: rgb(124, 155, 154);
+}
