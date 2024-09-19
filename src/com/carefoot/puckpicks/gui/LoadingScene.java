@@ -1,15 +1,12 @@
 package com.carefoot.puckpicks.gui;
 
 import javafx.animation.Animation;
-import javafx.animation.RotateTransition;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
-import javafx.util.Duration;
 
 public class LoadingScene extends PPScene {
 	
@@ -49,7 +46,7 @@ public class LoadingScene extends PPScene {
 		spinner.setPreserveRatio(true);
 		spinner.setFitHeight(60d);
 		spinner.setFitWidth(60d);
-		rotate(spinner);
+		PPAnimation.rotate(spinner, 360, 1180, Animation.INDEFINITE);
 		return spinner;
 	}
 	
@@ -59,14 +56,5 @@ public class LoadingScene extends PPScene {
 		text.setId("load-status");
 		text.setTranslateY(50d);
 		return text;
-	}
-	
-	// Animates the loading spinner image to rotate
-	private void rotate(Node node) {
-		RotateTransition rt = new RotateTransition(Duration.millis(1100), node);
-		rt.setDelay(Duration.ZERO);
-		rt.setByAngle(360);
-		rt.setCycleCount(Animation.INDEFINITE);
-		rt.play();
 	}
 }

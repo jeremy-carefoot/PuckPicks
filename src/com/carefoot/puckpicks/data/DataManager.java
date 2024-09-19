@@ -6,14 +6,19 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
+
 import org.json.JSONObject;
 
 public class DataManager {
 	
 	private final String BASE_URL = "https://api-web.nhle.com/";
 	
-	// Submits an HTTP GET request using the NHL api as base url
-	// Returns response as JSONObject
+	/**
+	 * Submits a data request to the NHL API  
+	 * 
+	 * @param req DataRequest object containing request information
+	 * @return JSONObject containing data from NHL API
+	 */
 	public JSONObject submitRequest(DataRequest req) {
 		JSONObject response = null;
 		try {

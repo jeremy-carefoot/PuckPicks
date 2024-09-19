@@ -1,5 +1,10 @@
 package com.carefoot.puckpicks.data;
 
+import java.util.HashMap;
+import java.util.List;
+
+import org.json.JSONObject;
+
 public class GoalieRequest implements DataRequest {
 	
 	private static final String DEFAULT_CATEGORY = "wins";
@@ -35,6 +40,17 @@ public class GoalieRequest implements DataRequest {
 	@Override
 	public String requestSubUrl() {
 		return subUrl;
+	}
+
+	/**
+	 * Parses goalies from JSON format into a list of HashMaps each with keys for data
+	 * 
+	 * 
+	 * @param parse JSONObject to parse
+	 * @return List of HashMaps where each HashMap corresponds to a different goalie
+	 */
+	public static List<HashMap<String, String>> parseJSONResponse(JSONObject parse) {
+		return SkaterRequest.parseJSONResponse(parse);
 	}
 
 }
