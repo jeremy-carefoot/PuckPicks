@@ -4,8 +4,8 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
-
 import org.json.JSONObject;
 
 public class DataManager {
@@ -17,7 +17,7 @@ public class DataManager {
 	public JSONObject submitRequest(DataRequest req) {
 		JSONObject response = null;
 		try {
-			URL url = new URL(BASE_URL + req.requestSubUrl());
+			URL url = new URI(BASE_URL + req.requestSubUrl()).toURL();
 			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 			connection.setRequestMethod("GET");				
 			if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {

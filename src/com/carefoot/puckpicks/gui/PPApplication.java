@@ -6,9 +6,12 @@ import javafx.stage.Stage;
 public class PPApplication {
 	
 	private final Stage stage;
+	private final LoadingScene loading;
 	
 	public PPApplication(Stage stage) {
 		this.stage = stage;
+		this.loading = new LoadingScene();
+		this.stage.setScene(loading.scene());
 		setTitle("PuckPicks");
 	}
 	
@@ -20,6 +23,11 @@ public class PPApplication {
 	// Closes window
 	public void close() {
 		stage.close();
+	}
+	
+	// Enables loading scene until scene is updated
+	public void loading() {
+		stage.setScene(loading.scene());
 	}
 
 	// Set the window title

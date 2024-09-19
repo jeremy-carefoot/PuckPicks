@@ -1,0 +1,10 @@
+.root {
+	-fx-background-color: rgb(50, 50, 50);
+}
+
+#title-text {
+	-fx-font-size: 24px;
+	-fx-fill: rgb(154, 185, 184);
+	-fx-font-weight: bold;
+	-fx-font-style: italic;
+}
