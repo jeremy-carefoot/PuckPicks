@@ -2,9 +2,25 @@
 	-fx-background-color: rgb(50, 50, 50);
 }
 
+.leaderboard-button {
+	-fx-background-color: rgb(154,185,184);
+	-fx-background-radius: 10px;
+	-fx-padding: 10px 20px;
+	-fx-font-size: 18px;
+}
+
 #title-text {
-	-fx-font-size: 24px;
+	-fx-font-size: 28px;
 	-fx-fill: rgb(154, 185, 184);
 	-fx-font-weight: bold;
 	-fx-font-style: italic;
+}
+
+#title-box {
+	-fx-padding: 20px;
+}
+
+#player-list {
+	-fx-background-color: rgb(50, 50, 50);
+	-fx-background-insets: 20px;
 }
