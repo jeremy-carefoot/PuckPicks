@@ -1,5 +1,6 @@
 package com.carefoot.puckpicks.gui;
 
+import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
@@ -11,39 +12,69 @@ public class PPApplication {
 	public PPApplication(Stage stage) {
 		this.stage = stage;
 		this.loading = new LoadingScene();
-		this.stage.setScene(loading.scene());
+		loading.build();
 		setTitle("PuckPicks");
 	}
 	
-	// Shows window
+	/**
+	 * Opens the application window
+	 */
 	public void open() {
 		stage.show();
 	}
 	
-	// Closes window
+	/**
+	 * Closes the application window
+	 */
 	public void close() {
 		stage.close();
 	}
 	
-	// Enables loading scene until scene is updated
+	/**
+	 * Enables the loading screen until scene is updated
+	 */
 	public void loading() {
-		stage.setScene(loading.scene());
+		setScene(loading);
 	}
 
-	// Set the window title
+	/**
+	 * Sets the title of the application window
+	 * @param title New window title
+	 */
 	public void setTitle(String title) {
 		stage.setTitle(title);
 	}
 
-	// Sets a new scene
+	/**
+	 * Sets a new scene in the application.
+	 * Loads the scene asynchronously if it hasn't been built yet.
+	 * If the scene is built, immediately updates the application.
+	 * @param scene PPScene object (does not have to be initialized)
+	 */
 	public void setScene(PPScene scene) {
-		stage.setScene(scene.scene());
+		if (!scene.initialized()) {
+			loading();
+			new Thread(() -> {
+				scene.build();
+				Platform.runLater(() -> stage.setScene(scene.scene()));
+			}).start();
+		} else {
+			stage.setScene(scene.scene());
+		}
 	}
 	
+	/**
+	 * Get the current window title
+	 * @return Window title 
+	 */
 	public String getTitle() {
 		return stage.getTitle();
 	}
 	
+	/**
+	 * Gets instance of current JavaFX scene
+	 * @return Scene object
+	 */
 	public Scene getScene() {
 		return stage.getScene();
 	}

@@ -12,7 +12,7 @@ public class AppLauncher extends Application {
 	public void start(Stage stage) throws Exception {
 		PPApplication app = new PPApplication(stage);
 		app.open();
-		
+
 		debug(app);
 	}
 	

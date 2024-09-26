@@ -16,15 +16,26 @@ public class LoadingScene extends PPScene {
 	public LoadingScene() {
 		super("loading.css");
 		loadStatus = null;
+	}
+	
+	@Override
+	public void build() {		
 		setScene(new Scene(assembleContent(), 500d, 500d));
 	}
 	
-	// Safe update the current load status
+	/**
+	 * Update the current loading status
+	 * @param status New loading status
+	 */
 	public void updateLoadStatus(String status) {
 		if (loadStatus == null) loadStatus = buildLoadStatus(status);
 		else loadStatus.setText(status);
 	}
 	
+	/**
+	 * Get the current load status
+	 * @return Current load status
+	 */
 	public String getLoadStatus() {
 		return loadStatus.getText();
 	}

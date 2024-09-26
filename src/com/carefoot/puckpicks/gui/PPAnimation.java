@@ -2,7 +2,9 @@ package com.carefoot.puckpicks.gui;
 
 import javafx.animation.FadeTransition;
 import javafx.animation.RotateTransition;
+import javafx.scene.Cursor;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.util.Duration;
 

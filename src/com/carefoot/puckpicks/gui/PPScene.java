@@ -6,15 +6,18 @@ public abstract class PPScene {
 	
 	private Scene scene;
 	private String css;
+	private boolean initialized;
 	
 	public PPScene(String css) {
 		scene = null;
+		initialized = false;
 		this.css = css;
 	}
 	
-	public void setScene(Scene scene) {
+	protected void setScene(Scene scene) {
 		if (scene != null) {
 			this.scene = scene;
+			initialized = true;
 		} else {
 			throw new IllegalArgumentException("Scene cannot be null");
 		}
@@ -23,8 +26,14 @@ public abstract class PPScene {
 			this.scene.getStylesheets().add(PPScene.class.getClassLoader().getResource("style/" + css).toExternalForm());
 	}
 	
+	public abstract void build();
+	
 	public Scene scene() {
 		return scene;
+	}
+	
+	public boolean initialized() {
+		return initialized;
 	}
 
 }

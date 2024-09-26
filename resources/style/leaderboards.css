@@ -9,6 +9,14 @@
 	-fx-font-size: 18px;
 }
 
+.list-cell {
+	-fx-background-color: rgb(50, 50, 50);
+}
+
+.list-cell:odd {
+	-fx-background-color: rgb(100, 100 ,100);
+}
+
 #title-text {
 	-fx-font-size: 28px;
 	-fx-fill: rgb(154, 185, 184);

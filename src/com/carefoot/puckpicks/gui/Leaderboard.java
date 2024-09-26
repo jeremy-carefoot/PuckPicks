@@ -1,12 +1,22 @@
 package com.carefoot.puckpicks.gui;
 
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+import org.json.JSONObject;
+
 import com.carefoot.puckpicks.data.DataManager;
+import com.carefoot.puckpicks.data.SkaterRequest;
 
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
@@ -18,16 +28,20 @@ public class Leaderboard extends PPScene {
 	
 	public Leaderboard() {
 		super("leaderboards.css");
-		displayPlayers = true;
-		setScene(new Scene(assembleContent(), 500d, 500d));		
 		this.dataManager = new DataManager();
+		displayPlayers = true;
 	}
 	
 	public Leaderboard(boolean displayPlayers) {
 		super("leaderboards.css");
-		this.displayPlayers = displayPlayers;
-		setScene(new Scene(assembleContent(), 500d, 500d));
 		this.dataManager = new DataManager();
+		this.displayPlayers = displayPlayers;
+	}
+	
+	@Override
+	public void build() {		
+		Scene scene = new Scene(assembleContent(), 500d, 500d);		
+		setScene(scene);
 	}
 	
 	// Assembles scene content
@@ -62,7 +76,7 @@ public class Leaderboard extends PPScene {
 		Button viewGoalies = new Button("Goalie Leaderboard");
 		PPAnimation.animateButtonHover(viewGoalies, 100);
 		viewPlayers.getStyleClass().add("leaderboard-button");
-		viewGoalies.getStyleClass()	.add("leaderboard-button");
+		viewGoalies.getStyleClass().add("leaderboard-button");
 
 		hbox.getChildren().addAll(viewPlayers, viewGoalies);	
 		return hbox;
@@ -71,7 +85,27 @@ public class Leaderboard extends PPScene {
 	// TODO finish this
 	private ListView<HBox> buildPlayerList() {
 		ListView<HBox> list = new ListView<HBox>();		
+		list.getItems().addAll(buildPlayerElements("points", 20));
 		list.setId("player-list");
+		return list;
+	}
+	
+	// TODO finish this
+	private List<HBox> buildPlayerElements(String category, int limit) {
+		List<HBox> list = new ArrayList<>();
+		JSONObject players = dataManager.submitRequest(new SkaterRequest(category, limit));
+
+		for (HashMap<String, String> player : SkaterRequest.parseJSONResponse(players)) {
+			HBox hbox = new HBox();
+			Text playerName = new Text(player.get("firstName") + " " + player.get("lastName"));
+			ImageView headshot = new ImageView(new Image(player.get("headshot")));
+			headshot.setFitHeight(75d);
+			headshot.setFitWidth(75d);
+			headshot.setPreserveRatio(true);
+			hbox.getChildren().addAll(headshot, playerName);
+			list.add(hbox);
+		}
+		
 		return list;
 	}
 
