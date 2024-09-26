@@ -16,7 +16,6 @@ public class AppLauncher extends Application {
 		debug(app);
 	}
 	
-	// Main method
 	public static void main(String[] args) {
 		launch(args);
 	}

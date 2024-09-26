@@ -13,6 +13,7 @@ public class PPApplication {
 		this.stage = stage;
 		this.loading = new LoadingScene();
 		loading.build();
+		loading();
 		setTitle("PuckPicks");
 	}
 	

@@ -43,8 +43,7 @@ public class GoalieRequest implements DataRequest {
 	}
 
 	/**
-	 * Parses goalies from JSON format into a list of HashMaps each with keys for data
-	 * 
+	 * Parses goalies from JSON format into a list of HashMaps each with keys for data 
 	 * 
 	 * @param parse JSONObject to parse
 	 * @return List of HashMaps where each HashMap corresponds to a different goalie

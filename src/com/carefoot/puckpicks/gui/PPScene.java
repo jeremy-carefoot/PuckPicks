@@ -14,6 +14,10 @@ public abstract class PPScene {
 		this.css = css;
 	}
 	
+	/**
+	 * Sets the JavaFX scene object, marks scene as initialized, and loads scene CSS
+	 * @param scene JavaFX scene object
+	 */
 	protected void setScene(Scene scene) {
 		if (scene != null) {
 			this.scene = scene;
@@ -26,14 +30,22 @@ public abstract class PPScene {
 			this.scene.getStylesheets().add(PPScene.class.getClassLoader().getResource("style/" + css).toExternalForm());
 	}
 	
-	public abstract void build();
-	
+	/**
+	 * Get JavaFX Scene object instance of scene
+	 * @return JavaFX Scene object
+	 */
 	public Scene scene() {
 		return scene;
 	}
 	
+	/**
+	 * Returns whether or not the scene has been initialized
+	 * @return True or false
+	 */
 	public boolean initialized() {
 		return initialized;
 	}
+
+	public abstract void build(); // initialization method for subclasses
 
 }
