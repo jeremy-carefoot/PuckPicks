@@ -18,8 +18,10 @@ import javafx.scene.control.ListView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 
 public class Leaderboard extends PPScene {
 	
@@ -87,6 +89,7 @@ public class Leaderboard extends PPScene {
 		ListView<HBox> list = new ListView<HBox>();		
 		list.getItems().addAll(buildPlayerElements("points", 20));
 		list.setId("player-list");
+		VBox.setVgrow(list, Priority.ALWAYS);
 		return list;
 	}
 	
@@ -97,16 +100,35 @@ public class Leaderboard extends PPScene {
 
 		for (HashMap<String, String> player : SkaterRequest.parseJSONResponse(players)) {
 			HBox hbox = new HBox();
-			Text playerName = new Text(player.get("firstName") + " " + player.get("lastName"));
-			ImageView headshot = new ImageView(new Image(player.get("headshot")));
-			headshot.setFitHeight(75d);
-			headshot.setFitWidth(75d);
-			headshot.setPreserveRatio(true);
-			hbox.getChildren().addAll(headshot, playerName);
+			VBox namenumber = buildNameNumber(player);
+			ImageView headshot = renderHeadshot(player);
+
+			hbox.getChildren().addAll(headshot, namenumber);
 			list.add(hbox);
 		}
 		
 		return list;
+	}
+	
+	// Builds the player name and number column in list view
+	private VBox buildNameNumber(HashMap<String, String> player) {
+		VBox namenumber = new VBox();
+		namenumber.setAlignment(Pos.CENTER_LEFT);
+		Text playerName = new Text(player.get("firstName") + " " + player.get("lastName"));
+		Text playerNumber = new Text("#" + player.get("sweaterNumber"));
+		playerName.setId("player-name");
+		playerNumber.setId("player-no");
+		namenumber.getChildren().addAll(playerName, playerNumber);
+		return namenumber;
+	}
+	
+	// Renders the player headshot
+	private ImageView renderHeadshot(HashMap<String, String> player) {		
+		ImageView headshot = new ImageView(new Image(player.get("headshot")));
+		headshot.setFitHeight(75d);
+		headshot.setFitWidth(75d);
+		headshot.setPreserveRatio(true);
+		return headshot;
 	}
 
 }

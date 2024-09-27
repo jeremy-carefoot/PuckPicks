@@ -32,3 +32,15 @@
 	-fx-background-color: rgb(50, 50, 50);
 	-fx-background-insets: 20px;
 }
+
+#player-name {
+	-fx-font-size: 18px;
+	-fx-fill: rgb(200, 200, 200);
+	-fx-font-weight: bold;
+}
+
+#player-no {
+	-fx-font-size: 16px;
+	-fx-fill: rgb(154, 185, 184);
+	-fx-font-weight: bold;
+}

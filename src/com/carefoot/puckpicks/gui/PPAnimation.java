@@ -2,9 +2,7 @@ package com.carefoot.puckpicks.gui;
 
 import javafx.animation.FadeTransition;
 import javafx.animation.RotateTransition;
-import javafx.scene.Cursor;
 import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.util.Duration;
 
@@ -15,7 +13,7 @@ import javafx.util.Duration;
 public class PPAnimation {
 	
 	/**
-	 * Rotates a node with provided params
+	 * Rotates a node with provided parameters
 	 * 
 	 * @param node Node to rotate
 	 * @param angle Angle to rotate through
