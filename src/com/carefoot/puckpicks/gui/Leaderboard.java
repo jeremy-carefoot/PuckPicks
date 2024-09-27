@@ -1,6 +1,7 @@
 package com.carefoot.puckpicks.gui;
 
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -9,6 +10,7 @@ import org.json.JSONObject;
 
 import com.carefoot.puckpicks.data.DataManager;
 import com.carefoot.puckpicks.data.SkaterRequest;
+import com.carefoot.puckpicks.main.PuckPicks;
 
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
@@ -19,9 +21,9 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
-import javafx.scene.text.TextAlignment;
 
 public class Leaderboard extends PPScene {
 	
@@ -51,16 +53,17 @@ public class Leaderboard extends PPScene {
 		VBox vbox = new VBox();
 		HBox titleSection = buildTitleSection("Leaderboard");
 		HBox buttonSection = buildButtonSection();
-		ListView<HBox> playerList = buildPlayerList();
+		Region spacer = PPGui.filler(false, 15);
 		
-		vbox.getChildren().addAll(titleSection, buttonSection, playerList);
+		ListView<HBox> playerList = buildPlayerList("points", 20);
+		
+		vbox.getChildren().addAll(titleSection, buttonSection, spacer, playerList);
 		return vbox;
 	}
 	
 	// Constructs title 
 	private HBox buildTitleSection(String text) {
-		Text title = new Text(text.toUpperCase());
-		title.setId("title-text");
+		Text title = PPGui.textWithStyle(text, "title");
 		HBox hbox = new HBox();
 		hbox.setAlignment(Pos.CENTER);
 		hbox.setId("title-box");
@@ -84,47 +87,82 @@ public class Leaderboard extends PPScene {
 		return hbox;
 	}
 	
-	// TODO finish this
-	private ListView<HBox> buildPlayerList() {
+	// Builds the skater ListView
+	private ListView<HBox> buildPlayerList(String category, int limit) {
 		ListView<HBox> list = new ListView<HBox>();		
-		list.getItems().addAll(buildPlayerElements("points", 20));
+		list.getItems().addAll(buildPlayerElements(category, limit));
 		list.setId("player-list");
 		VBox.setVgrow(list, Priority.ALWAYS);
 		return list;
 	}
 	
-	// TODO finish this
+	// Builds the player elements for use in the player list
 	private List<HBox> buildPlayerElements(String category, int limit) {
 		List<HBox> list = new ArrayList<>();
 		JSONObject players = dataManager.submitRequest(new SkaterRequest(category, limit));
 
+		int counter = 1;
 		for (HashMap<String, String> player : SkaterRequest.parseJSONResponse(players)) {
-			HBox hbox = new HBox();
-			VBox namenumber = buildNameNumber(player);
-			ImageView headshot = renderHeadshot(player);
-
-			hbox.getChildren().addAll(headshot, namenumber);
+			HBox hbox = buildSkaterElement(player, category, counter);
 			list.add(hbox);
+			counter++;
 		}
 		
 		return list;
 	}
 	
-	// Builds the player name and number column in list view
-	private VBox buildNameNumber(HashMap<String, String> player) {
-		VBox namenumber = new VBox();
-		namenumber.setAlignment(Pos.CENTER_LEFT);
-		Text playerName = new Text(player.get("firstName") + " " + player.get("lastName"));
-		Text playerNumber = new Text("#" + player.get("sweaterNumber"));
-		playerName.setId("player-name");
-		playerNumber.setId("player-no");
-		namenumber.getChildren().addAll(playerName, playerNumber);
-		return namenumber;
+	// Builds a list element for provided skater
+	// rank is the integer ranking of the skater in the given category
+	private HBox buildSkaterElement(HashMap<String, String> player, String category, int rank) {		
+			HBox hbox = new HBox(20);
+			hbox.setAlignment(Pos.CENTER_LEFT);
+			
+			Text pos = PPGui.textWithStyle(Integer.toString(rank), "h2-dark");
+			VBox namenumber = buildSkaterInfo(player);
+			Region filler = PPGui.filler(true);
+			VBox stats = buildSkaterStats(player, category);
+			ImageView headshot = renderHeadshot(player);
+
+			hbox.getChildren().addAll(pos, headshot, namenumber, filler, stats);
+			return hbox;
 	}
 	
-	// Renders the player headshot
-	private ImageView renderHeadshot(HashMap<String, String> player) {		
-		ImageView headshot = new ImageView(new Image(player.get("headshot")));
+	// Builds the skater list element name and number column 
+	private VBox buildSkaterInfo(HashMap<String, String> player) {
+		VBox playerinfo = new VBox();
+		playerinfo.setAlignment(Pos.CENTER_LEFT);
+		
+		Text playerName = PPGui.textWithID(player.get("firstName") + " " + player.get("lastName"), "player-name");
+		Text playerNumber = PPGui.textWithStyle("#" + player.get("sweaterNumber"), "h2");
+		Text team = PPGui.textWithStyle(player.get("teamAbbrev"), "h2-dark-italic");
+		
+		playerinfo.getChildren().addAll(playerName, playerNumber, team);
+		return playerinfo;
+	}
+	
+	// Creates the skater list element stats column
+	private VBox buildSkaterStats(HashMap<String, String> player, String category) {
+		VBox stats = new VBox();
+		stats.setId("player-element-stats");
+		stats.setAlignment(Pos.CENTER);
+		
+		Text cat = PPGui.textWithStyle(PuckPicks.capitalizeFirst(category), "h2-dark");
+		Text stat = PPGui.textWithStyle(player.get("value"), "title");
+		
+		stats.getChildren().addAll(cat, stat);
+		return stats;
+	}
+	
+	// Renders the skater list element headshot
+	private ImageView renderHeadshot(HashMap<String, String> player) {
+		ImageView headshot;
+		try {
+			headshot = new ImageView(new Image(new URI(player.get("headshot")).toURL().openStream()));
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}		
+		
 		headshot.setFitHeight(75d);
 		headshot.setFitWidth(75d);
 		headshot.setPreserveRatio(true);

@@ -17,7 +17,26 @@
 	-fx-background-color: rgb(100, 100 ,100);
 }
 
-#title-text {
+.h2 {
+	-fx-font-size: 15px;
+	-fx-fill: rgb(154, 185, 184);
+	-fx-font-weight: bold;
+}
+
+.h2-dark {
+	-fx-font-size: 15px;
+	-fx-fill: rgb(140, 140, 140);
+	-fx-font-weight: bold;
+}
+
+.h2-dark-italic {
+	-fx-font-size: 15px;
+	-fx-fill: rgb(140, 140, 140);
+	-fx-font-weight: bold;
+	-fx-font-style: italic;
+}
+
+.title {
 	-fx-font-size: 28px;
 	-fx-fill: rgb(154, 185, 184);
 	-fx-font-weight: bold;
@@ -34,13 +53,12 @@
 }
 
 #player-name {
-	-fx-font-size: 18px;
+	-fx-font-size: 19px;
 	-fx-fill: rgb(200, 200, 200);
 	-fx-font-weight: bold;
 }
 
-#player-no {
-	-fx-font-size: 16px;
-	-fx-fill: rgb(154, 185, 184);
-	-fx-font-weight: bold;
+#player-element-stats {
+	-fx-padding: 0px 15px;
 }
+
