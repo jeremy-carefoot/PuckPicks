@@ -9,13 +9,17 @@ import java.util.List;
 import org.json.JSONObject;
 
 import com.carefoot.puckpicks.data.DataManager;
+import com.carefoot.puckpicks.data.DataRequest;
+import com.carefoot.puckpicks.data.GoalieRequest;
 import com.carefoot.puckpicks.data.SkaterRequest;
 import com.carefoot.puckpicks.main.PuckPicks;
 
+import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -27,8 +31,22 @@ import javafx.scene.text.Text;
 
 public class Leaderboard extends PPScene {
 	
-	private boolean displayPlayers;
+	// Player element display limits for dropdown menu
+	private static final String[] listLimits = {
+			"5",
+			"10",
+			"15",
+			"20",
+			"50",
+			"100"
+	};
+
 	private final DataManager dataManager;
+
+	private boolean displayPlayers;
+	private ComboBox<String> categorySelect = null;
+	private ComboBox<String> limitSelect = null;
+	private ListView<HBox> list = new ListView<>(); // nodes cannot be changed once scene is created, therefor we dynamically modify one ListView node
 	
 	public Leaderboard() {
 		super("leaderboards.css");
@@ -46,6 +64,7 @@ public class Leaderboard extends PPScene {
 	public void build() {		
 		Scene scene = new Scene(assembleContent(), 500d, 500d);		
 		setScene(scene);
+		buildPlayerList(categorySelect.getValue().toLowerCase(), Integer.parseInt(limitSelect.getValue()));
 	}
 	
 	// Assembles scene content
@@ -53,11 +72,12 @@ public class Leaderboard extends PPScene {
 		VBox vbox = new VBox();
 		HBox titleSection = buildTitleSection("Leaderboard");
 		HBox buttonSection = buildButtonSection();
-		Region spacer = PPGui.filler(false, 15);
+		HBox dropdownSection = buildDropdownSection();
+		Region spacer1 = PPGui.filler(false, 15);
+		Region spacer2 = PPGui.filler(false, 15);
 		
-		ListView<HBox> playerList = buildPlayerList("points", 20);
-		
-		vbox.getChildren().addAll(titleSection, buttonSection, spacer, playerList);
+		vbox.getChildren().addAll(titleSection, buttonSection, spacer1, dropdownSection, spacer2, list);
+
 		return vbox;
 	}
 	
@@ -87,13 +107,48 @@ public class Leaderboard extends PPScene {
 		return hbox;
 	}
 	
-	// Builds the skater ListView
-	private ListView<HBox> buildPlayerList(String category, int limit) {
-		ListView<HBox> list = new ListView<HBox>();		
-		list.getItems().addAll(buildPlayerElements(category, limit));
+	// Builds the menu section with DropDowns
+	private HBox buildDropdownSection() {
+		HBox hbox = new HBox(20);
+		hbox.setAlignment(Pos.CENTER);
+		
+		categorySelect = new ComboBox<>();
+		categorySelect.getItems().addAll(displayPlayers ? SkaterRequest.CATEGORIES : GoalieRequest.CATEGORIES);
+		categorySelect.setValue(displayPlayers ? SkaterRequest.DEFAULT_CATEGORY : GoalieRequest.DEFAULT_CATEGORY);
+		categorySelect.setOnAction(e -> {
+			updatePlayerList(categorySelect.getValue().toLowerCase(), Integer.parseInt(limitSelect.getValue()));
+		});
+		
+		limitSelect = new ComboBox<>();
+		limitSelect.getItems().addAll(listLimits);
+		limitSelect.setValue(Integer.toString(DataRequest.DEFAULT_LIMIT));
+		limitSelect.setOnAction(e -> {
+			updatePlayerList(categorySelect.getValue().toLowerCase(), Integer.parseInt(limitSelect.getValue()));
+		});
+		
+		hbox.getChildren().addAll(categorySelect, limitSelect);
+		return hbox;
+	}
+	
+	// Builds the skater ListView (for scene initialization)
+	private void buildPlayerList(String category, int limit) {
 		list.setId("player-list");
 		VBox.setVgrow(list, Priority.ALWAYS);
-		return list;
+		updatePlayerList(category, limit);
+	}
+
+	// Updates the player elements in the list view
+	// Assumes list has already been initialized and configured 
+	// Runs async on another thread
+	private void updatePlayerList(String category, int limit) {
+		enableListLoading();
+		new Thread(() -> {	
+			List<HBox> playerElements = buildPlayerElements(category, limit);
+			Platform.runLater(() -> {
+				list.getItems().clear();
+				list.getItems().addAll(playerElements);
+			});
+		}).start();
 	}
 	
 	// Builds the player elements for use in the player list
@@ -167,6 +222,17 @@ public class Leaderboard extends PPScene {
 		headshot.setFitWidth(75d);
 		headshot.setPreserveRatio(true);
 		return headshot;
+	}
+	
+	// Renders a loading spinner in the skater list
+	// For use while async loading 
+	private void enableListLoading() {
+		list.getItems().clear();
+		HBox hbox = new HBox();
+		hbox.setPrefHeight(list.getHeight());
+		hbox.setAlignment(Pos.CENTER);
+		hbox.getChildren().add(LoadingScene.buildLoadingSpinner());
+		list.getItems().add(hbox);
 	}
 
 }

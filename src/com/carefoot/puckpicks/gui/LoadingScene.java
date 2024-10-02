@@ -10,7 +10,7 @@ import javafx.scene.text.Text;
 
 public class LoadingScene extends PPScene {
 	
-	private final String SPINNER_FILE = "loading_spinner.png";
+	private static final String SPINNER_FILE = "loading_spinner.png";
 	private Text loadStatus;
 	
 	public LoadingScene() {
@@ -25,6 +25,7 @@ public class LoadingScene extends PPScene {
 	
 	/**
 	 * Update the current loading status
+	 * 
 	 * @param status New loading status
 	 */
 	public void updateLoadStatus(String status) {
@@ -40,6 +41,22 @@ public class LoadingScene extends PPScene {
 		return loadStatus.getText();
 	}
 	
+	/**
+	 * Static method that builds the loading spinner image and animates it
+	 * Useful for other areas in application where loading spinner needs use
+	 * 
+	 * @return JavaFX Image view object
+	 */
+	public static ImageView buildLoadingSpinner() {		
+		Image img = new Image(LoadingScene.class.getClassLoader().getResourceAsStream(SPINNER_FILE));
+		ImageView spinner = new ImageView(img);
+		spinner.setPreserveRatio(true);
+		spinner.setFitHeight(60d);
+		spinner.setFitWidth(60d);
+		PPAnimation.rotate(spinner, 360, 1180, Animation.INDEFINITE);
+		return spinner;
+	}
+	
 	// Builds main load scene 
 	private Parent assembleContent() {
 		StackPane sp = new StackPane();
@@ -48,17 +65,6 @@ public class LoadingScene extends PPScene {
 		
 		sp.getChildren().addAll(loadingSpinner, loadStatus);
 		return sp;
-	}
-	
-	// Builds the loading spinner
-	private ImageView buildLoadingSpinner() {		
-		Image img = new Image(getClass().getClassLoader().getResourceAsStream(SPINNER_FILE));
-		ImageView spinner = new ImageView(img);
-		spinner.setPreserveRatio(true);
-		spinner.setFitHeight(60d);
-		spinner.setFitWidth(60d);
-		PPAnimation.rotate(spinner, 360, 1180, Animation.INDEFINITE);
-		return spinner;
 	}
 	
 	// Builds load status text

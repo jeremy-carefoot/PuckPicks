@@ -10,8 +10,9 @@ import org.json.JSONObject;
 
 public class SkaterRequest implements DataRequest {
 	
-	private static final String DEFAULT_CATEGORY = "points";
-	private static final int DEFAULT_LIMIT = 20;
+	public static final String DEFAULT_CATEGORY = "Points";
+	
+	public static final String[] CATEGORIES = {"Points", "Goals", "Assists"}; // all possible categories for SkaterRequest
 	
 	private String subUrl;	
 	

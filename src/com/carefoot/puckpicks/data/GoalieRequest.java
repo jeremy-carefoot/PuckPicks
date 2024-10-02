@@ -7,8 +7,9 @@ import org.json.JSONObject;
 
 public class GoalieRequest implements DataRequest {
 	
-	private static final String DEFAULT_CATEGORY = "wins";
-	private static final int DEFAULT_LIMIT = 20;
+	public static final String DEFAULT_CATEGORY = "GAA";
+
+	public static final String[] CATEGORIES = {"GAA", "SV%", "Shutouts"}; // all possible categories for GoalieRequest
 
 	private String subUrl;
 	
