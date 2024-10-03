@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.json.JSONObject;
 
+import com.carefoot.puckpicks.data.AsyncTaskQueue;
 import com.carefoot.puckpicks.data.DataManager;
 import com.carefoot.puckpicks.data.DataRequest;
 import com.carefoot.puckpicks.data.GoalieRequest;
@@ -24,6 +25,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
@@ -40,10 +42,10 @@ public class Leaderboard extends PPScene {
 			"50",
 			"100"
 	};
-
 	private final DataManager dataManager;
 
 	private boolean displayPlayers;
+	private AsyncTaskQueue imageRenderer = null;
 	private ComboBox<String> categorySelect = null;
 	private ComboBox<String> limitSelect = null;
 	private ListView<HBox> list = new ListView<>(); // nodes cannot be changed once scene is created, therefor we dynamically modify one ListView node
@@ -142,13 +144,16 @@ public class Leaderboard extends PPScene {
 	// Runs async on another thread
 	private void updatePlayerList(String category, int limit) {
 		enableListLoading();
+		imageRenderer = new AsyncTaskQueue(4);
 		new Thread(() -> {	
 			List<HBox> playerElements = buildPlayerElements(category, limit);
 			Platform.runLater(() -> {
 				list.getItems().clear();
 				list.getItems().addAll(playerElements);
 			});
+			imageRenderer.start();
 		}).start();
+		System.out.println(Thread.activeCount());
 	}
 	
 	// Builds the player elements for use in the player list
@@ -176,9 +181,9 @@ public class Leaderboard extends PPScene {
 			VBox namenumber = buildSkaterInfo(player);
 			Region filler = PPGui.filler(true);
 			VBox stats = buildSkaterStats(player, category);
-			ImageView headshot = renderHeadshot(player);
+			renderHeadshotAsync(player, hbox, 1);
 
-			hbox.getChildren().addAll(pos, headshot, namenumber, filler, stats);
+			hbox.getChildren().addAll(pos, namenumber, filler, stats);
 			return hbox;
 	}
 	
@@ -208,20 +213,25 @@ public class Leaderboard extends PPScene {
 		return stats;
 	}
 	
-	// Renders the skater list element headshot
-	private ImageView renderHeadshot(HashMap<String, String> player) {
-		ImageView headshot;
-		try {
-			headshot = new ImageView(new Image(new URI(player.get("headshot")).toURL().openStream()));
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}		
-		
-		headshot.setFitHeight(75d);
-		headshot.setFitWidth(75d);
-		headshot.setPreserveRatio(true);
-		return headshot;
+	// Renders the skater list element headshot asynchronously
+	// Adds the render to an async task queue
+	private void renderHeadshotAsync(HashMap<String, String> player, Pane node, int index) {
+		imageRenderer.add(() -> {			
+			ImageView headshot;
+			try {
+				headshot = new ImageView(new Image(new URI(player.get("headshot")).toURL().openStream()));
+			} catch (Exception e) {
+				e.printStackTrace();
+				return;
+			}		
+			
+			headshot.setFitHeight(75d);
+			headshot.setFitWidth(75d);
+			headshot.setPreserveRatio(true);
+			Platform.runLater(() -> {				
+				node.getChildren().add(index, headshot);
+			});
+		});
 	}
 	
 	// Renders a loading spinner in the skater list
