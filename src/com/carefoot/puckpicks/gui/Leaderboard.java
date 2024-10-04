@@ -45,8 +45,8 @@ public class Leaderboard extends PPScene {
 	private final DataManager dataManager;
 
 	private boolean displayPlayers;
-	private AsyncTaskQueue imageRenderer = null;
-	private ComboBox<String> categorySelect = null;
+	private AsyncTaskQueue imageRenderer = null; // instance of an AsyncTaskQueue used for rendering images in the list
+	private ComboBox<String> categorySelect = null; 
 	private ComboBox<String> limitSelect = null;
 	private ListView<HBox> list = new ListView<>(); // nodes cannot be changed once scene is created, therefor we dynamically modify one ListView node
 	
@@ -66,7 +66,7 @@ public class Leaderboard extends PPScene {
 	public void build() {		
 		Scene scene = new Scene(assembleContent(), 500d, 500d);		
 		setScene(scene);
-		buildPlayerList(categorySelect.getValue().toLowerCase(), Integer.parseInt(limitSelect.getValue()));
+		buildSkaterList(categorySelect.getValue().toLowerCase(), Integer.parseInt(limitSelect.getValue()));
 	}
 	
 	// Assembles scene content
@@ -100,13 +100,28 @@ public class Leaderboard extends PPScene {
 		
 		Button viewPlayers = new Button("Player Leaderboard");
 		PPAnimation.animateButtonHover(viewPlayers, 100);
+		viewPlayers.setOnAction((e) -> {
+			onButtonPress(viewPlayers);
+		});
+
 		Button viewGoalies = new Button("Goalie Leaderboard");
 		PPAnimation.animateButtonHover(viewGoalies, 100);
+		viewGoalies.setOnAction((e) -> {
+			onButtonPress(viewGoalies);
+		});
+
 		viewPlayers.getStyleClass().add("leaderboard-button");
 		viewGoalies.getStyleClass().add("leaderboard-button");
 
 		hbox.getChildren().addAll(viewPlayers, viewGoalies);	
 		return hbox;
+	}
+
+	// Builds the code run when a button is clicked
+	private void onButtonPress(Button b) {
+		displayPlayers = (b.getText() == "Player Leaderboard"); // whether player or goalie leaderboard
+		updateCategorySelect();
+		updatePlayerList(categorySelect.getValue().toLowerCase(), Integer.parseInt(limitSelect.getValue()));
 	}
 	
 	// Builds the menu section with DropDowns
@@ -115,8 +130,7 @@ public class Leaderboard extends PPScene {
 		hbox.setAlignment(Pos.CENTER);
 		
 		categorySelect = new ComboBox<>();
-		categorySelect.getItems().addAll(displayPlayers ? SkaterRequest.CATEGORIES : GoalieRequest.CATEGORIES);
-		categorySelect.setValue(displayPlayers ? SkaterRequest.DEFAULT_CATEGORY : GoalieRequest.DEFAULT_CATEGORY);
+		updateCategorySelect();
 		categorySelect.setOnAction(e -> {
 			updatePlayerList(categorySelect.getValue().toLowerCase(), Integer.parseInt(limitSelect.getValue()));
 		});
@@ -132,8 +146,16 @@ public class Leaderboard extends PPScene {
 		return hbox;
 	}
 	
+	// Updates category select to currently selected leaderboard type (players or goalies)
+	private void updateCategorySelect() {
+		categorySelect.getItems().clear();
+		categorySelect.getItems().addAll(displayPlayers ? SkaterRequest.CATEGORIES : GoalieRequest.CATEGORIES);
+		categorySelect.setValue(displayPlayers ? SkaterRequest.DEFAULT_CATEGORY : GoalieRequest.DEFAULT_CATEGORY);
+		// TODO fix so setValue does not set off ActionEvent
+	}
+	
 	// Builds the skater ListView (for scene initialization)
-	private void buildPlayerList(String category, int limit) {
+	private void buildSkaterList(String category, int limit) {
 		list.setId("player-list");
 		VBox.setVgrow(list, Priority.ALWAYS);
 		updatePlayerList(category, limit);
@@ -147,19 +169,18 @@ public class Leaderboard extends PPScene {
 		imageRenderer = new AsyncTaskQueue(4);
 		new Thread(() -> {	
 			List<HBox> playerElements = buildPlayerElements(category, limit);
+			imageRenderer.release(); // start rendering images async
 			Platform.runLater(() -> {
 				list.getItems().clear();
 				list.getItems().addAll(playerElements);
 			});
-			imageRenderer.start();
 		}).start();
-		System.out.println(Thread.activeCount());
 	}
 	
 	// Builds the player elements for use in the player list
 	private List<HBox> buildPlayerElements(String category, int limit) {
 		List<HBox> list = new ArrayList<>();
-		JSONObject players = dataManager.submitRequest(new SkaterRequest(category, limit));
+		JSONObject players = dataManager.submitRequest(displayPlayers ? new SkaterRequest(category, limit) : new GoalieRequest(category, limit));
 
 		int counter = 1;
 		for (HashMap<String, String> player : SkaterRequest.parseJSONResponse(players)) {
