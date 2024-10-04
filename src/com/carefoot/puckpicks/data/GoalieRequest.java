@@ -2,14 +2,19 @@ package com.carefoot.puckpicks.data;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.json.JSONObject;
 
 public class GoalieRequest implements DataRequest {
 	
-	public static final String DEFAULT_CATEGORY = "GAA";
+	public static final String DEFAULT_CATEGORY = "Wins"; 
 
-	public static final String[] CATEGORIES = {"GAA", "SV%", "Shutouts"}; // all possible categories for GoalieRequest
+	private static final Map<String, String> CATEGORIES = Map.of(
+			"Wins", "wins",
+			"Shutouts", "shutouts",
+			"Save %", "savePctg"
+			); // Possible categories for GoalieRequest (display text, category key)
 
 	private String subUrl;
 	
@@ -35,17 +40,25 @@ public class GoalieRequest implements DataRequest {
 
 	// Return sub-url query string given a category and a limit
 	private String getGoalieSubUrl(String category, int limit) {
-		return "v1/goalie-stats-leaders/current?categories=" + category + "&limit=" + Integer.toString(limit);
+		// category map is used to convert category display name to url path
+		return "v1/goalie-stats-leaders/current?categories=" + CATEGORIES.get(category) + "&limit=" + Integer.toString(limit); 
 	}
 
 	@Override
 	public String requestSubUrl() {
 		return subUrl;
 	}
+	
+	/**
+	 * Returns all possible categories for this request type 
+	 * @return String[] of possible categories
+	 */
+	public static String[] categories() {
+		return (String[]) CATEGORIES.keySet().toArray(new String[0]);
+	}
 
 	/**
 	 * Parses goalies from JSON format into a list of HashMaps each with keys for data 
-	 * 
 	 * @param parse JSONObject to parse
 	 * @return List of HashMaps where each HashMap corresponds to a different goalie
 	 */

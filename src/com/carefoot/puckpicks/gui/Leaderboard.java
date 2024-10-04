@@ -16,6 +16,8 @@ import com.carefoot.puckpicks.data.SkaterRequest;
 import com.carefoot.puckpicks.main.PuckPicks;
 
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -66,7 +68,7 @@ public class Leaderboard extends PPScene {
 	public void build() {		
 		Scene scene = new Scene(assembleContent(), 500d, 500d);		
 		setScene(scene);
-		buildSkaterList(categorySelect.getValue().toLowerCase(), Integer.parseInt(limitSelect.getValue()));
+		buildSkaterList(categorySelect.getValue(), Integer.parseInt(limitSelect.getValue()));
 	}
 	
 	// Assembles scene content
@@ -121,7 +123,7 @@ public class Leaderboard extends PPScene {
 	private void onButtonPress(Button b) {
 		displayPlayers = (b.getText() == "Player Leaderboard"); // whether player or goalie leaderboard
 		updateCategorySelect();
-		updatePlayerList(categorySelect.getValue().toLowerCase(), Integer.parseInt(limitSelect.getValue()));
+		updatePlayerList(categorySelect.getValue(), Integer.parseInt(limitSelect.getValue()));
 	}
 	
 	// Builds the menu section with DropDowns
@@ -132,14 +134,14 @@ public class Leaderboard extends PPScene {
 		categorySelect = new ComboBox<>();
 		updateCategorySelect();
 		categorySelect.setOnAction(e -> {
-			updatePlayerList(categorySelect.getValue().toLowerCase(), Integer.parseInt(limitSelect.getValue()));
+			updatePlayerList(categorySelect.getValue(), Integer.parseInt(limitSelect.getValue()));
 		});
 		
 		limitSelect = new ComboBox<>();
 		limitSelect.getItems().addAll(listLimits);
 		limitSelect.setValue(Integer.toString(DataRequest.DEFAULT_LIMIT));
 		limitSelect.setOnAction(e -> {
-			updatePlayerList(categorySelect.getValue().toLowerCase(), Integer.parseInt(limitSelect.getValue()));
+			updatePlayerList(categorySelect.getValue(), Integer.parseInt(limitSelect.getValue()));
 		});
 		
 		hbox.getChildren().addAll(categorySelect, limitSelect);
@@ -148,9 +150,14 @@ public class Leaderboard extends PPScene {
 	
 	// Updates category select to currently selected leaderboard type (players or goalies)
 	private void updateCategorySelect() {
+		EventHandler<ActionEvent> action = categorySelect.getOnAction();
+		categorySelect.setOnAction(null);
+
 		categorySelect.getItems().clear();
-		categorySelect.getItems().addAll(displayPlayers ? SkaterRequest.CATEGORIES : GoalieRequest.CATEGORIES);
+		categorySelect.getItems().addAll(displayPlayers ? SkaterRequest.categories() : GoalieRequest.categories());
 		categorySelect.setValue(displayPlayers ? SkaterRequest.DEFAULT_CATEGORY : GoalieRequest.DEFAULT_CATEGORY);
+
+		categorySelect.setOnAction(action);
 		// TODO fix so setValue does not set off ActionEvent
 	}
 	

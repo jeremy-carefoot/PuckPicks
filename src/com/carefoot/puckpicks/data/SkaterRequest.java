@@ -3,6 +3,7 @@ package com.carefoot.puckpicks.data;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -12,7 +13,11 @@ public class SkaterRequest implements DataRequest {
 	
 	public static final String DEFAULT_CATEGORY = "Points";
 	
-	public static final String[] CATEGORIES = {"Points", "Goals", "Assists"}; // all possible categories for SkaterRequest
+	private static final Map<String, String> CATEGORIES = Map.of(
+			"Points", "points",
+			"Goals", "goals",
+			"Assists", "assists"
+			); // Possible categories for SkaterRequest (display text, category key)
 	
 	private String subUrl;	
 	
@@ -38,7 +43,8 @@ public class SkaterRequest implements DataRequest {
 
 	// Returns sub-URL query string given a category and limit
 	private String getSkaterSubUrl(String category, int limit) {
-		return "v1/skater-stats-leaders/current?categories=" + category + "&limit=" + Integer.toString(limit);
+		// categories map used to convert from category display name to url path
+		return "v1/skater-stats-leaders/current?categories=" + CATEGORIES.get(category) + "&limit=" + Integer.toString(limit);
 	}
 
 	@Override
@@ -47,8 +53,15 @@ public class SkaterRequest implements DataRequest {
 	}
 	
 	/**
+	 * Returns all possible categories for this request type
+	 * @return String[] of categories
+	 */
+	public static String[] categories() {
+		return (String[]) CATEGORIES.keySet().toArray(new String[0]);
+	}
+	
+	/**
 	 * Parses skaters from JSON format into a list of HashMaps each with keys for data
-	 * 
 	 * @param parse JSONObject to parse
 	 * @return List of HashMaps where each HashMap corresponds to a different skater
 	 */
