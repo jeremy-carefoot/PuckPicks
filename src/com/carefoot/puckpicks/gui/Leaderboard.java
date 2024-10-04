@@ -2,6 +2,7 @@ package com.carefoot.puckpicks.gui;
 
 
 import java.net.URI;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -33,10 +34,20 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
+/**
+ * A scene that displays a leaderboard with leading skaters in a selected category
+ * 
+ * 	Contains buttons to select either Goalie or Player leaderboards
+ * 	Contains dropdowns to select the leading category and how many skaters to display
+ * 
+ * Extends the PPScene class for use with PPApplication instance
+ * 
+ * @author jeremycarefoot
+ *
+ */
 public class Leaderboard extends PPScene {
 	
-	// Player element display limits for dropdown menu
-	private static final String[] listLimits = {
+	private static final String[] listLimits = {// Player element display limits for dropdown menu
 			"5",
 			"10",
 			"15",
@@ -44,13 +55,13 @@ public class Leaderboard extends PPScene {
 			"50",
 			"100"
 	};
-	private final DataManager dataManager;
+	private final DataManager dataManager; 		// DataManager instance for getting skater data
 
 	private boolean displayPlayers;
-	private AsyncTaskQueue imageRenderer = null; // instance of an AsyncTaskQueue used for rendering images in the list
+	private AsyncTaskQueue imageRenderer = null; 		// instance of an AsyncTaskQueue used for rendering images in the list
 	private ComboBox<String> categorySelect = null; 
 	private ComboBox<String> limitSelect = null;
-	private ListView<HBox> list = new ListView<>(); // nodes cannot be changed once scene is created, therefor we dynamically modify one ListView node
+	private ListView<HBox> list = new ListView<>(); 	// nodes cannot be changed once scene is created, therefor we dynamically modify one ListView node
 	
 	public Leaderboard() {
 		super("leaderboards.css");
