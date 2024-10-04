@@ -24,9 +24,9 @@ public class AsyncTaskQueue {
 	}
 	
 	/**
-	 * Runs all tasks in the current queue in thread pool
+	 * Runs all tasks in the current queue in thread pool and clears the queue
 	 */
-	public void release() {
+	public void flush() {
 		ExecutorService threadPool = Executors.newFixedThreadPool(threads);
 		
 		Runnable r;

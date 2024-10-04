@@ -176,7 +176,7 @@ public class Leaderboard extends PPScene {
 		imageRenderer = new AsyncTaskQueue(4);
 		new Thread(() -> {	
 			List<HBox> playerElements = buildPlayerElements(category, limit);
-			imageRenderer.release(); // start rendering images async
+			imageRenderer.flush(); // start rendering images async
 			Platform.runLater(() -> {
 				list.getItems().clear();
 				list.getItems().addAll(playerElements);
