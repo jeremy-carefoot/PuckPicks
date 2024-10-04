@@ -35,12 +35,12 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
 /**
- * A scene that displays a leaderboard with leading skaters in a selected category
+ * A scene that displays a leaderboard with leading skaters in a selected category.
  * 
- * 	Contains buttons to select either Goalie or Player leaderboards
- * 	Contains dropdowns to select the leading category and how many skaters to display
+ * 	Contains buttons to select either Goalie or Player leaderboards.
+ * 	Contains dropdowns to select the leading category and how many skaters to display.
  * 
- * Extends the PPScene class for use with PPApplication instance
+ * Extends the PPScene class for use with PPApplication instance.
  * 
  * @author jeremycarefoot
  *
@@ -63,12 +63,19 @@ public class Leaderboard extends PPScene {
 	private ComboBox<String> limitSelect = null;
 	private ListView<HBox> list = new ListView<>(); 	// nodes cannot be changed once scene is created, therefor we dynamically modify one ListView node
 	
+	/**
+	 * Default constructor; builds a leaderboard that will display players by default
+	 */
 	public Leaderboard() {
 		super("leaderboards.css");
 		this.dataManager = new DataManager();
 		displayPlayers = true;
 	}
 	
+	/**
+	 * Constructor that specifies whether to display players or goalies by default
+	 * @param displayPlayers true to display players, false to display goalies
+	 */
 	public Leaderboard(boolean displayPlayers) {
 		super("leaderboards.css");
 		this.dataManager = new DataManager();
@@ -82,7 +89,11 @@ public class Leaderboard extends PPScene {
 		buildSkaterList(categorySelect.getValue(), Integer.parseInt(limitSelect.getValue()));
 	}
 	
-	// Assembles scene content
+	/**
+	 * Builds the scene content and returns a Parent node for the Scene object.
+	 * All components are constructed here (except for the player list).
+	 * @return Parent node with scene content
+	 */
 	private Parent assembleContent() {
 		VBox vbox = new VBox();
 		HBox titleSection = buildTitleSection("Leaderboard");
@@ -96,7 +107,9 @@ public class Leaderboard extends PPScene {
 		return vbox;
 	}
 	
-	// Constructs title 
+	/**
+	 * Builds the top title section 
+	 */
 	private HBox buildTitleSection(String text) {
 		Text title = PPGui.textWithStyle(text, "title");
 		HBox hbox = new HBox();
@@ -106,7 +119,9 @@ public class Leaderboard extends PPScene {
 		return hbox;
 	}
 	
-	// Constructs horizontal button section
+	/**
+	 * Builds the section with player/goalie selection buttons
+	 */
 	private HBox buildButtonSection() {
 		HBox hbox = new HBox(20);
 		hbox.setAlignment(Pos.CENTER);
@@ -130,28 +145,33 @@ public class Leaderboard extends PPScene {
 		return hbox;
 	}
 
-	// Builds the code run when a button is clicked
+	/**
+	 * Method executed when the Player/Goalie selection buttons are clicked in the scene.
+	 * @param b Button object clicked
+	 */
 	private void onButtonPress(Button b) {
 		displayPlayers = (b.getText() == "Player Leaderboard"); // whether player or goalie leaderboard
 		updateCategorySelect();
 		updatePlayerList(categorySelect.getValue(), Integer.parseInt(limitSelect.getValue()));
 	}
 	
-	// Builds the menu section with DropDowns
+	/**
+	 *  Builds the section containing the dropdowns
+	 */
 	private HBox buildDropdownSection() {
 		HBox hbox = new HBox(20);
 		hbox.setAlignment(Pos.CENTER);
 		
 		categorySelect = new ComboBox<>();
-		updateCategorySelect();
-		categorySelect.setOnAction(e -> {
+		updateCategorySelect(); 		// ensure category select has correct select options
+		categorySelect.setOnAction(e -> {// when new value is selected, update the player list
 			updatePlayerList(categorySelect.getValue(), Integer.parseInt(limitSelect.getValue()));
 		});
 		
 		limitSelect = new ComboBox<>();
 		limitSelect.getItems().addAll(listLimits);
 		limitSelect.setValue(Integer.toString(DataRequest.DEFAULT_LIMIT));
-		limitSelect.setOnAction(e -> {
+		limitSelect.setOnAction(e -> {// when new value is selected, update the player list
 			updatePlayerList(categorySelect.getValue(), Integer.parseInt(limitSelect.getValue()));
 		});
 		
@@ -159,59 +179,84 @@ public class Leaderboard extends PPScene {
 		return hbox;
 	}
 	
-	// Updates category select to currently selected leaderboard type (players or goalies)
+	/**
+	 * Updates the scene category select dropdown menu.
+	 * Ensures that the correct selection options are visible depending on whether Player or Goalie leaderboard is selected.
+	 */
 	private void updateCategorySelect() {
 		EventHandler<ActionEvent> action = categorySelect.getOnAction();
-		categorySelect.setOnAction(null);
+		/*
+		 * we temporarily disable the dropdown action event because setValue() triggers it
+		 * we don't want to trigger the event while changing the dropdown selection options
+		 */
+		categorySelect.setOnAction(null); 		
 
 		categorySelect.getItems().clear();
 		categorySelect.getItems().addAll(displayPlayers ? SkaterRequest.categories() : GoalieRequest.categories());
 		categorySelect.setValue(displayPlayers ? SkaterRequest.DEFAULT_CATEGORY : GoalieRequest.DEFAULT_CATEGORY);
 
-		categorySelect.setOnAction(action);
-		// TODO fix so setValue does not set off ActionEvent
+		categorySelect.setOnAction(action); 		// re-enable action event
 	}
 	
-	// Builds the skater ListView (for scene initialization)
+	/**
+	 * Builds the skater list object
+	 * Should only be run when scene is initially built
+	 */
 	private void buildSkaterList(String category, int limit) {
 		list.setId("player-list");
 		VBox.setVgrow(list, Priority.ALWAYS);
 		updatePlayerList(category, limit);
 	}
 
-	// Updates the player elements in the list view
-	// Assumes list has already been initialized and configured 
-	// Runs async on another thread
+	/**
+	 * Updates the skater list to contain skaters relevent to the provided category/limit values.
+	 * Performed asynchronously.
+	 * 
+	 * @param category Category to submit in the skater data request
+	 * @param limit How many skaters to fetch
+	 */
 	private void updatePlayerList(String category, int limit) {
-		enableListLoading();
+		enableListLoading();	
 		imageRenderer = new AsyncTaskQueue(4);
 		new Thread(() -> {	
 			List<HBox> playerElements = buildPlayerElements(category, limit);
-			imageRenderer.flush(); // start rendering images async
-			Platform.runLater(() -> {
+			imageRenderer.flush(); 	// start rendering images async
+			Platform.runLater(() -> {// update GUI on main JavaFX thread
 				list.getItems().clear();
 				list.getItems().addAll(playerElements);
 			});
 		}).start();
 	}
 	
-	// Builds the player elements for use in the player list
+	/**
+	 * Prepares a List of HBox objects that are constructed skater gui list elements
+	 * 
+	 * @param category Category to submit in the skater data request
+	 * @param limit How many players to fetch
+	 * @return List of HBox, where each HBox represents a skater
+	 */
 	private List<HBox> buildPlayerElements(String category, int limit) {
 		List<HBox> list = new ArrayList<>();
 		JSONObject players = dataManager.submitRequest(displayPlayers ? new SkaterRequest(category, limit) : new GoalieRequest(category, limit));
 
-		int counter = 1;
+		int rank = 1;
 		for (HashMap<String, String> player : SkaterRequest.parseJSONResponse(players)) {
-			HBox hbox = buildSkaterElement(player, category, counter);
+			HBox hbox = buildSkaterElement(player, category, rank);
 			list.add(hbox);
-			counter++;
+			rank++;
 		}
 		
 		return list;
 	}
 	
-	// Builds a list element for provided skater
-	// rank is the integer ranking of the skater in the given category
+	/**
+	 * Builds an HBox object that is a correctly formatted list element for the skater list
+	 * 
+	 * @param player HashMap with skater details
+	 * @param category Category for display on list element
+	 * @param rank Ranking of skater
+	 * @return Formatted HBox object
+	 */
 	private HBox buildSkaterElement(HashMap<String, String> player, String category, int rank) {		
 			HBox hbox = new HBox(20);
 			hbox.setAlignment(Pos.CENTER_LEFT);
@@ -226,7 +271,11 @@ public class Leaderboard extends PPScene {
 			return hbox;
 	}
 	
-	// Builds the skater list element name and number column 
+	/**
+	 * Constructs column of player info for individual list elements
+	 * @param player HashMap of player information 
+	 * @return Correctly formatted VBox object
+	 */
 	private VBox buildSkaterInfo(HashMap<String, String> player) {
 		VBox playerinfo = new VBox();
 		playerinfo.setAlignment(Pos.CENTER_LEFT);
@@ -239,7 +288,12 @@ public class Leaderboard extends PPScene {
 		return playerinfo;
 	}
 	
-	// Creates the skater list element stats column
+	/**
+	 * Builds a VBox column of the players numerical stat for individual list elements
+	 * @param player HashMap of player information
+	 * @param category Category the stat is respective too
+	 * @return Correctly formatted VBox object
+	 */
 	private VBox buildSkaterStats(HashMap<String, String> player, String category) {
 		VBox stats = new VBox();
 		stats.setId("player-element-stats");
@@ -252,10 +306,15 @@ public class Leaderboard extends PPScene {
 		return stats;
 	}
 	
-	// Renders the skater list element headshot asynchronously
-	// Adds the render to an async task queue
+	/**
+	 * Renders a player headshot image asychronously, and adds into specified JavaFX node when completed
+	 * 
+	 * @param player HashMap with player information
+	 * @param node JavaFX node where image is added when rendering is complete
+	 * @param index Index of node to insert the image at
+	 */
 	private void renderHeadshotAsync(HashMap<String, String> player, Pane node, int index) {
-		imageRenderer.add(() -> {			
+		imageRenderer.add(() -> {// image rendering task added to a queue
 			ImageView headshot;
 			try {
 				headshot = new ImageView(new Image(new URI(player.get("headshot")).toURL().openStream()));
@@ -267,15 +326,21 @@ public class Leaderboard extends PPScene {
 			headshot.setFitHeight(75d);
 			headshot.setFitWidth(75d);
 			headshot.setPreserveRatio(true);
-			Platform.runLater(() -> {				
+			Platform.runLater(() -> {// when done rendering use JavaFX main thread to update GUI		
 				node.getChildren().add(index, headshot);
 			});
 		});
 	}
 	
-	// Renders a loading spinner in the skater list
-	// For use while async loading 
+	/**
+	 * Enables the loading spinner on the skater list part of the scene.
+	 * Lifetime of the loading spinner is until the list is updated.
+	 */
 	private void enableListLoading() {
+		/*
+		 * Loading spinner is essentially a list element with a height of the entire list itself.
+		 * This is because we can't change layout of Root scene, so we must concurrently modify list
+		 */
 		list.getItems().clear();
 		HBox hbox = new HBox();
 		hbox.setPrefHeight(list.getHeight());
