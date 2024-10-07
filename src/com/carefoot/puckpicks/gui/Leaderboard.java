@@ -2,19 +2,13 @@ package com.carefoot.puckpicks.gui;
 
 
 import java.net.URI;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 import org.json.JSONObject;
 
-import com.carefoot.puckpicks.data.AsyncTaskQueue;
-import com.carefoot.puckpicks.data.DataManager;
-import com.carefoot.puckpicks.data.DataRequest;
-import com.carefoot.puckpicks.data.GoalieRequest;
-import com.carefoot.puckpicks.data.SkaterRequest;
-import com.carefoot.puckpicks.main.PuckPicks;
+import com.carefoot.puckpicks.data.*;
 
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -27,11 +21,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.Region;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 
 /**
@@ -240,7 +230,8 @@ public class Leaderboard extends PPScene {
 		JSONObject players = dataManager.submitRequest(displayPlayers ? new SkaterRequest(category, limit) : new GoalieRequest(category, limit));
 
 		int rank = 1;
-		for (HashMap<String, String> player : SkaterRequest.parseJSONResponse(players)) {
+		for (HashMap<String, String> player : displayPlayers ? 
+				SkaterRequest.parseJSONResponse(players) : GoalieRequest.parseJSONResponse(players, category)) {// parse JSON response use appropriate method 
 			HBox hbox = buildSkaterElement(player, category, rank);
 			list.add(hbox);
 			rank++;
@@ -299,7 +290,7 @@ public class Leaderboard extends PPScene {
 		stats.setId("player-element-stats");
 		stats.setAlignment(Pos.CENTER);
 		
-		Text cat = PPGui.textWithStyle(PuckPicks.capitalizeFirst(category), "h2-dark");
+		Text cat = PPGui.textWithStyle(category, "h2-dark");
 		Text stat = PPGui.textWithStyle(player.get("value"), "title");
 		
 		stats.getChildren().addAll(cat, stat);

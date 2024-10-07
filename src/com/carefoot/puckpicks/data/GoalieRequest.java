@@ -1,5 +1,6 @@
 package com.carefoot.puckpicks.data;
 
+import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -60,10 +61,24 @@ public class GoalieRequest implements DataRequest {
 	/**
 	 * Parses goalies from JSON format into a list of HashMaps each with keys for data 
 	 * @param parse JSONObject to parse
+	 * @param category Category used to obtain JSONObject
 	 * @return List of HashMaps where each HashMap corresponds to a different goalie
 	 */
-	public static List<HashMap<String, String>> parseJSONResponse(JSONObject parse) {
-		return SkaterRequest.parseJSONResponse(parse);
+	public static List<HashMap<String, String>> parseJSONResponse(JSONObject parse, String category) {
+		List<HashMap<String, String>> output = SkaterRequest.parseJSONResponse(parse);
+		
+		if (CATEGORIES.get(category) == "savePctg") {// if we are parsing goalies sorted by save %
+			/*
+			 * Parse save percentage value to 4 decimal places
+			 */
+			DecimalFormat df = new DecimalFormat("#.0000");
+			output.forEach((goalie) -> {
+				Double decimalSavePctg = Double.parseDouble(goalie.get("value"));
+				goalie.put("value", df.format(decimalSavePctg));
+			});
+		}
+		
+		return output;
 	}
 
 }
