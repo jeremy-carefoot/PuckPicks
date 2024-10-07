@@ -1,5 +1,6 @@
 .root {
 	-fx-background-color: rgb(50, 50, 50);
+	-fx-text-fill: rgb(154, 185, 184);
 }
 
 /*
@@ -58,4 +59,15 @@
 
 .combo-box .list-view .cell:selected {
 	-fx-border-width: 0;
+}
+
+/*
+* Button
+*/
+
+.button {
+	-fx-background-color: rgb(154,185,184);
+	-fx-background-radius: 10px;
+	-fx-padding: 10px 20px;
+	-fx-font-size: 18px;
 }

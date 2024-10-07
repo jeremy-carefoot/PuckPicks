@@ -67,6 +67,8 @@ public class SkaterRequest implements DataRequest {
 	 */
 	public static List<HashMap<String, String>> parseJSONResponse(JSONObject parse) {
 		ArrayList<HashMap<String, String>> elements = new ArrayList<>();
+		if (parse == null) 	// return empty list if invalid object to parse
+			return elements;
 		JSONArray array = parse.getJSONArray(parse.keys().next());
 		for (Object o : array) {
 			JSONObject json = (JSONObject) o;
