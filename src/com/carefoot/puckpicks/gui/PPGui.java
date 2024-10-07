@@ -1,15 +1,21 @@
 package com.carefoot.puckpicks.gui;
 
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.text.Text;
 
+/**
+ * Static class for constructing reusable GUI elements
+ * 
+ * @author jeremycarefoot
+ *
+ */
 public class PPGui {
 	
-	/*
-	 * Class includes static methods for GUI construction
-	 */
+	private static final String ERROR_SYMBOL_IMAGE = "error.png";
 	
 	/**
 	 * Creates a Text node with an included CSS style class
@@ -65,6 +71,21 @@ public class PPGui {
 			HBox.setHgrow(region, Priority.ALWAYS);
 		
 		return region;
+	}
+	
+	/**
+	 * Get ImageView of a generic grey error symbol
+	 * 
+	 * @param width Width of the symbol
+	 * @param height Height of the symbol
+	 * @return ImageView object of symbol
+	 */
+	public static ImageView errorSymbol(double width, double height) {
+		Image image = new Image(PPGui.class.getClassLoader().getResourceAsStream(ERROR_SYMBOL_IMAGE));
+		ImageView view = new ImageView(image);
+		view.setFitWidth(width);
+		view.setFitHeight(height);
+		return view;
 	}
 
 }

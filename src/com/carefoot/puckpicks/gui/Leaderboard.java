@@ -58,7 +58,7 @@ public class Leaderboard extends PPScene {
 	 */
 	public Leaderboard() {
 		super("leaderboards.css");
-		this.dataManager = new DataManager();
+		this.dataManager = new DataManager("https://api-web.nhle.com/");
 		displayPlayers = true;
 	}
 	
@@ -68,7 +68,7 @@ public class Leaderboard extends PPScene {
 	 */
 	public Leaderboard(boolean displayPlayers) {
 		super("leaderboards.css");
-		this.dataManager = new DataManager();
+		this.dataManager = new DataManager("https://api-web.nhle.com/");
 		this.displayPlayers = displayPlayers;
 	}
 	
@@ -227,7 +227,17 @@ public class Leaderboard extends PPScene {
 	 */
 	private List<HBox> buildPlayerElements(String category, int limit) {
 		List<HBox> list = new ArrayList<>();
-		JSONObject players = dataManager.submitRequest(displayPlayers ? new SkaterRequest(category, limit) : new GoalieRequest(category, limit));
+		JSONObject players;
+		try {// attempt to grab data
+			players = dataManager.submitRequest(displayPlayers ? new SkaterRequest(category, limit) : new GoalieRequest(category, limit));
+		} catch (Exception e) {
+			/*
+			 * If there is an error, return the list with an error message and print trace
+			 */
+			e.printStackTrace();
+			list.add(getErrorDisplay());
+			return list;
+		}
 
 		int rank = 1;
 		for (HashMap<String, String> player : displayPlayers ? 
@@ -338,6 +348,23 @@ public class Leaderboard extends PPScene {
 		hbox.setAlignment(Pos.CENTER);
 		hbox.getChildren().add(LoadingScene.buildLoadingSpinner());
 		list.getItems().add(hbox);
+	}
+	
+	/**
+	 * Builds an HBox object with an error message
+	 * @return Formatted HBox object
+	 */
+	private HBox getErrorDisplay() {
+		HBox hbox = new HBox();
+		VBox vbox = new VBox();
+
+		vbox.setPrefHeight(list.getHeight());
+		vbox.setAlignment(Pos.CENTER);
+		hbox.setAlignment(Pos.CENTER);
+
+		vbox.getChildren().addAll(PPGui.errorSymbol(70, 70), PPGui.textWithStyle("Error fetching data", "h2-dark"));
+		hbox.getChildren().add(vbox);
+		return hbox;
 	}
 
 }
