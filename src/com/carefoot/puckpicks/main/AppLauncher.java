@@ -1,7 +1,7 @@
 package com.carefoot.puckpicks.main;
 
-import com.carefoot.puckpicks.gui.Leaderboard;
 import com.carefoot.puckpicks.gui.PPApplication;
+import com.carefoot.puckpicks.gui.scenes.Leaderboard;
 
 import javafx.application.Application;
 import javafx.stage.Stage;

@@ -1,4 +1,6 @@
-package com.carefoot.puckpicks.gui;
+package com.carefoot.puckpicks.gui.scenes;
+
+import com.carefoot.puckpicks.gui.PPAnimation;
 
 import javafx.animation.Animation;
 import javafx.scene.Parent;

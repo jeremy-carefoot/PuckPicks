@@ -1,4 +1,4 @@
-package com.carefoot.puckpicks.data;
+package com.carefoot.puckpicks.data.requests;
 
 import java.text.DecimalFormat;
 import java.util.HashMap;
@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.json.JSONObject;
+
+import com.carefoot.puckpicks.data.DataRequest;
 
 public class GoalieRequest implements DataRequest {
 	

@@ -1,7 +1,11 @@
 package com.carefoot.puckpicks.gui;
 
+import com.carefoot.puckpicks.gui.scenes.LoadingScene;
+import com.carefoot.puckpicks.gui.scenes.PPScene;
+
 import javafx.application.Platform;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 public class PPApplication {
@@ -14,6 +18,7 @@ public class PPApplication {
 		this.loading = new LoadingScene();
 		loading.build();
 		loading();
+		setIcon(new Image(getClass().getClassLoader().getResourceAsStream("icon.png")));
 		setTitle("PuckPicks");
 	}
 	
@@ -44,6 +49,14 @@ public class PPApplication {
 	 */
 	public void setTitle(String title) {
 		stage.setTitle(title);
+	}
+	
+	/**
+	 * Sets the icon of the application window
+	 * @param image Image object
+	 */
+	public void setIcon(Image image) {
+		stage.getIcons().add(image);
 	}
 
 	/**

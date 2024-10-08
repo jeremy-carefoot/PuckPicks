@@ -1,4 +1,4 @@
-package com.carefoot.puckpicks.gui;
+package com.carefoot.puckpicks.gui.scenes;
 
 import javafx.scene.Scene;
 

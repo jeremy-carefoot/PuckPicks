@@ -1,4 +1,4 @@
-package com.carefoot.puckpicks.gui;
+package com.carefoot.puckpicks.gui.scenes;
 
 
 import java.net.URI;
@@ -9,6 +9,10 @@ import java.util.List;
 import org.json.JSONObject;
 
 import com.carefoot.puckpicks.data.*;
+import com.carefoot.puckpicks.data.requests.GoalieRequest;
+import com.carefoot.puckpicks.data.requests.SkaterRequest;
+import com.carefoot.puckpicks.gui.PPAnimation;
+import com.carefoot.puckpicks.gui.PPGui;
 
 import javafx.application.Platform;
 import javafx.event.ActionEvent;

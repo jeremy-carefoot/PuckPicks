@@ -1,4 +1,4 @@
-package com.carefoot.puckpicks.data;
+package com.carefoot.puckpicks.data.requests;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -8,6 +8,8 @@ import java.util.Map;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import com.carefoot.puckpicks.data.DataRequest;
 
 public class SkaterRequest implements DataRequest {
 	
