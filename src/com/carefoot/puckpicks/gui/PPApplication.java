@@ -3,6 +3,10 @@ package com.carefoot.puckpicks.gui;
 import com.carefoot.puckpicks.gui.scenes.LoadingScene;
 import com.carefoot.puckpicks.gui.scenes.PPScene;
 
+import java.awt.Taskbar;
+import java.awt.Toolkit;
+import java.awt.Taskbar.Feature;
+
 import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
@@ -18,8 +22,25 @@ public class PPApplication {
 		this.loading = new LoadingScene();
 		loading.build();
 		loading();
-		setIcon(new Image(getClass().getClassLoader().getResourceAsStream("icon.png")));
+		configureOSWindow();
+	}
+	
+	/**
+	 * Configures properties of the window such as icon, title, etc.
+	 * Properties are OS-dependent
+	 */
+	private void configureOSWindow() {		
+		/*
+		 * Update properties that are not OS-dependent first
+		 */
 		setTitle("PuckPicks");
+		setIcon(new Image(getClass().getClassLoader().getResourceAsStream("icon.png")));
+		
+		if (Taskbar.isTaskbarSupported()) {// configure macOS and Linux taskbar (if applicable)
+			Taskbar bar = Taskbar.getTaskbar();
+			if (bar.isSupported(Feature.ICON_IMAGE))
+				bar.setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getClassLoader().getResource("icon.png")));
+			}
 	}
 	
 	/**

@@ -287,9 +287,9 @@ public class Leaderboard extends PPScene {
 		String position = player.get("position");
 		
 		Text playerName = PPGui.textWithID(player.get("firstName") + " " + player.get("lastName"), "player-name");
-		Text playerNumber = PPGui.textWithStyle("#" + player.get("sweaterNumber"), "h2");
-		Text team = PPGui.textWithStyle(player.get("teamAbbrev")
-				+ " - " + position + (position.equalsIgnoreCase("R") || position.equalsIgnoreCase("L") ? "W" : ""), "h2-dark-italic"); 	// if position is R or L, append W to indicate winger
+		Text playerNumber = PPGui.textWithStyle("#" + player.get("sweaterNumber")
+			+ " - " + position + (position.equalsIgnoreCase("R") || position.equalsIgnoreCase("L") ? "W" : ""), "h2"); 	// if position is R or L, append W to indicate winger
+		Text team = PPGui.textWithStyle(player.get("teamAbbrev"), "h2-dark");
 		// TODO do I like this?
 
 		playerinfo.getChildren().addAll(playerName, playerNumber, team);
