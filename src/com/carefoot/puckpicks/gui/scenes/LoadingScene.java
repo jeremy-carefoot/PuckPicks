@@ -1,11 +1,11 @@
 package com.carefoot.puckpicks.gui.scenes;
 
 import com.carefoot.puckpicks.gui.PPAnimation;
+import com.carefoot.puckpicks.gui.PPGui;
 
 import javafx.animation.Animation;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
@@ -50,11 +50,7 @@ public class LoadingScene extends PPScene {
 	 * @return JavaFX Image view object
 	 */
 	public static ImageView buildLoadingSpinner() {		
-		Image img = new Image(LoadingScene.class.getClassLoader().getResourceAsStream(SPINNER_FILE));
-		ImageView spinner = new ImageView(img);
-		spinner.setPreserveRatio(true);
-		spinner.setFitHeight(60d);
-		spinner.setFitWidth(60d);
+		ImageView spinner = PPGui.image(LoadingScene.class.getClassLoader().getResourceAsStream(SPINNER_FILE), 60, 60, true);
 		PPAnimation.rotate(spinner, 360, 1180, Animation.INDEFINITE);
 		return spinner;
 	}

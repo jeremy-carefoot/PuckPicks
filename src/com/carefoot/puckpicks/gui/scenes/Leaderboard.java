@@ -8,7 +8,9 @@ import java.util.List;
 
 import org.json.JSONObject;
 
-import com.carefoot.puckpicks.data.*;
+import com.carefoot.puckpicks.data.AsyncTaskQueue;
+import com.carefoot.puckpicks.data.DataManager;
+import com.carefoot.puckpicks.data.DataRequest;
 import com.carefoot.puckpicks.data.requests.GoalieRequest;
 import com.carefoot.puckpicks.data.requests.SkaterRequest;
 import com.carefoot.puckpicks.gui.PPAnimation;
@@ -23,7 +25,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListView;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.text.Text;
@@ -90,7 +91,7 @@ public class Leaderboard extends PPScene {
 	 */
 	private Parent assembleContent() {
 		VBox vbox = new VBox();
-		HBox titleSection = buildTitleSection("Leaderboard");
+		HBox titleSection = buildTitleSection("Leaderboards");
 		HBox buttonSection = buildButtonSection();
 		HBox dropdownSection = buildDropdownSection();
 		Region spacer1 = PPGui.filler(false, 15);
@@ -290,7 +291,6 @@ public class Leaderboard extends PPScene {
 		Text playerNumber = PPGui.textWithStyle("#" + player.get("sweaterNumber")
 			+ " - " + position + (position.equalsIgnoreCase("R") || position.equalsIgnoreCase("L") ? "W" : ""), "h2"); 	// if position is R or L, append W to indicate winger
 		Text team = PPGui.textWithStyle(player.get("teamAbbrev"), "h2-dark");
-		// TODO do I like this?
 
 		playerinfo.getChildren().addAll(playerName, playerNumber, team);
 		return playerinfo;
@@ -325,15 +325,12 @@ public class Leaderboard extends PPScene {
 		imageRenderer.add(() -> {// image rendering task added to a queue
 			ImageView headshot;
 			try {
-				headshot = new ImageView(new Image(new URI(player.get("headshot")).toURL().openStream()));
+				headshot = PPGui.image(new URI(player.get("headshot")).toURL().openStream(), 75, 75, true);
 			} catch (Exception e) {
 				e.printStackTrace();
 				return;
 			}		
 			
-			headshot.setFitHeight(75d);
-			headshot.setFitWidth(75d);
-			headshot.setPreserveRatio(true);
 			Platform.runLater(() -> {// when done rendering use JavaFX main thread to update GUI		
 				node.getChildren().add(index, headshot);
 			});

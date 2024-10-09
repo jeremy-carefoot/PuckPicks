@@ -40,7 +40,7 @@ public class PPApplication {
 			Taskbar bar = Taskbar.getTaskbar();
 			if (bar.isSupported(Feature.ICON_IMAGE))
 				bar.setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getClassLoader().getResource("icon.png")));
-			}
+		}
 	}
 	
 	/**

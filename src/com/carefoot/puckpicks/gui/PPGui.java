@@ -1,5 +1,7 @@
 package com.carefoot.puckpicks.gui;
 
+import java.io.InputStream;
+
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
@@ -71,6 +73,23 @@ public class PPGui {
 			HBox.setHgrow(region, Priority.ALWAYS);
 		
 		return region;
+	}
+	
+	/**
+	 * Creates an ImageView
+	 * 
+	 * @param stream InputStream of image
+	 * @param height Fit height of image
+	 * @param width Fit width of image
+	 * @param aspectRatio Whether to preserve image aspect ratio
+	 * @return ImageView object
+	 */
+	public static ImageView image(InputStream stream, double height, double width, boolean aspectRatio) {
+		ImageView image = new ImageView(new Image(stream));
+		image.setFitHeight(height);
+		image.setFitWidth(width);
+		image.setPreserveRatio(aspectRatio);
+		return image;
 	}
 	
 	/**
