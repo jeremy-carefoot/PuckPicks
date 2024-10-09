@@ -2,6 +2,8 @@ package com.carefoot.puckpicks.gui;
 
 import java.io.InputStream;
 
+import com.carefoot.puckpicks.main.PuckPicks;
+
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
@@ -91,20 +93,34 @@ public class PPGui {
 		image.setPreserveRatio(aspectRatio);
 		return image;
 	}
+
+	/**
+	 * Creates an ImageView from a file in resource folder
+	 * 
+	 * @param fileName Image file name
+	 * @param height Fit height of image
+	 * @param width Fit width of image
+	 * @param aspectRatio Whether to preserve image aspect ratio
+	 * @return ImageView object
+	 */
+	public static ImageView imageResource(String fileName, double height, double width, boolean aspectRatio) {
+		ImageView image = new ImageView(new Image(PuckPicks.getImageResource(fileName)));
+		image.setFitHeight(height);
+		image.setFitWidth(width);
+		image.setPreserveRatio(aspectRatio);
+		return image;
+	}
 	
 	/**
 	 * Get ImageView of a generic grey error symbol
 	 * 
-	 * @param width Width of the symbol
 	 * @param height Height of the symbol
+	 * @param width Width of the symbol
 	 * @return ImageView object of symbol
 	 */
-	public static ImageView errorSymbol(double width, double height) {
-		Image image = new Image(PPGui.class.getClassLoader().getResourceAsStream(ERROR_SYMBOL_IMAGE));
-		ImageView view = new ImageView(image);
-		view.setFitWidth(width);
-		view.setFitHeight(height);
-		return view;
+	public static ImageView errorSymbol(double height, double width) {
+		ImageView image = imageResource(ERROR_SYMBOL_IMAGE, height, width, true);
+		return image;
 	}
 
 }

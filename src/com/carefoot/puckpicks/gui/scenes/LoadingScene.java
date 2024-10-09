@@ -16,7 +16,7 @@ public class LoadingScene extends PPScene {
 	private Text loadStatus;
 	
 	public LoadingScene() {
-		super("loading.css");
+		super("loading.css", false);
 		loadStatus = null;
 	}
 	
@@ -50,7 +50,7 @@ public class LoadingScene extends PPScene {
 	 * @return JavaFX Image view object
 	 */
 	public static ImageView buildLoadingSpinner() {		
-		ImageView spinner = PPGui.image(LoadingScene.class.getClassLoader().getResourceAsStream(SPINNER_FILE), 60, 60, true);
+		ImageView spinner = PPGui.imageResource(SPINNER_FILE, 60, 60, true);
 		PPAnimation.rotate(spinner, 360, 1180, Animation.INDEFINITE);
 		return spinner;
 	}

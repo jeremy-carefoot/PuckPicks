@@ -22,10 +22,12 @@ import javafx.scene.text.Text;
  */
 public class MainMenu extends PPScene {
 	
+	private static final String LOGO_FILE = "logo.png"; 		// image file of primary logo
+	
 	private GridPane buttons;
 	
 	public MainMenu() {
-		super("menu.css");
+		super("menu.css", true);
 		buttons = new GridPane();
 	}
 
@@ -41,7 +43,7 @@ public class MainMenu extends PPScene {
 		VBox root = new VBox();
 		root.setAlignment(Pos.CENTER);
 		
-		ImageView logo = PPGui.image(getClass().getClassLoader().getResourceAsStream("logo.png"), 125, 250, true);
+		ImageView logo = PPGui.imageResource(LOGO_FILE, 125, 250, true);
 		Text welcome = PPGui.textWithStyle("Welcome back!", "h2-dark");
 		Text getStarted = PPGui.textWithStyle("Select a tool to get started:", "h2-dark");
 		Region spacer = PPGui.filler(false, 30);

@@ -62,7 +62,7 @@ public class Leaderboard extends PPScene {
 	 * Default constructor; builds a leaderboard that will display players by default
 	 */
 	public Leaderboard() {
-		super("leaderboards.css");
+		super("leaderboards.css", true);
 		this.dataManager = new DataManager("https://api-web.nhle.com/");
 		displayPlayers = true;
 	}
@@ -72,7 +72,7 @@ public class Leaderboard extends PPScene {
 	 * @param displayPlayers true to display players, false to display goalies
 	 */
 	public Leaderboard(boolean displayPlayers) {
-		super("leaderboards.css");
+		super("leaderboards.css", true);
 		this.dataManager = new DataManager("https://api-web.nhle.com/");
 		this.displayPlayers = displayPlayers;
 	}

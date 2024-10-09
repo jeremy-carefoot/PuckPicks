@@ -1,11 +1,12 @@
 package com.carefoot.puckpicks.gui;
 
+import java.awt.Taskbar;
+import java.awt.Taskbar.Feature;
+import java.awt.Toolkit;
+
 import com.carefoot.puckpicks.gui.scenes.LoadingScene;
 import com.carefoot.puckpicks.gui.scenes.PPScene;
-
-import java.awt.Taskbar;
-import java.awt.Toolkit;
-import java.awt.Taskbar.Feature;
+import com.carefoot.puckpicks.main.PuckPicks;
 
 import javafx.application.Platform;
 import javafx.scene.Scene;
@@ -14,14 +15,22 @@ import javafx.stage.Stage;
 
 public class PPApplication {
 	
+	private static final String APP_ICON_FILE = "icon.png"; 		// image file for application icon
+	
 	private final Stage stage;
 	private final LoadingScene loading;
+	private final StateManager stateManager;
 	
 	public PPApplication(Stage stage) {
 		this.stage = stage;
-		this.loading = new LoadingScene();
+		loading = new LoadingScene();
+		stateManager = new StateManager();
+
+		/* Constructing loading scene and enabling until first scene is set */
 		loading.build();
 		loading();
+
+		/* Configuring application window */
 		configureOSWindow();
 	}
 	
@@ -34,7 +43,7 @@ public class PPApplication {
 		 * Update properties that are not OS-dependent first
 		 */
 		setTitle("PuckPicks");
-		setIcon(new Image(getClass().getClassLoader().getResourceAsStream("icon.png")));
+		setIcon(new Image(PuckPicks.getImageResource(APP_ICON_FILE)));
 		
 		if (Taskbar.isTaskbarSupported()) {// configure macOS and Linux taskbar (if applicable)
 			Taskbar bar = Taskbar.getTaskbar();
@@ -87,6 +96,11 @@ public class PPApplication {
 	 * @param scene PPScene object (does not have to be initialized)
 	 */
 	public void setScene(PPScene scene) {
+		/* If the scene is considered navigable, log it for access with navigation back arrow */
+		if (scene.isNavigable())
+			stateManager.logState(scene);
+
+		/* Build and update the scene */
 		if (!scene.initialized()) {
 			loading();
 			new Thread(() -> {
@@ -96,6 +110,16 @@ public class PPApplication {
 		} else {
 			stage.setScene(scene.scene());
 		}
+	}
+	
+	/**
+	 * Sends the application back to the previously navigated scene.
+	 * Removes this scene from the scene stack
+	 */
+	public void goBack() {
+		PPScene previous = stateManager.getAndEjectPrevious();
+		if (previous != null) 	// do nothing if no valid previous scene
+			setScene(previous);
 	}
 	
 	/**

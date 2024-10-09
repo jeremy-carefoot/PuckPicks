@@ -1,5 +1,7 @@
 package com.carefoot.puckpicks.main;
 
+import java.io.InputStream;
+
 public class PuckPicks {
 	
 	/*
@@ -15,6 +17,15 @@ public class PuckPicks {
 		if (str == null || str.isEmpty()) 
             return str; // Return original string if null or empty
         return str.substring(0, 1).toUpperCase() + str.substring(1).toLowerCase();
+	}
+	
+	/**
+	 * Grabs an image from resource folder as an input stream
+	 * @param image_name Name of the image file
+	 * @return Image as InputStream
+	 */
+	public static InputStream getImageResource(String image_name) {
+		return PuckPicks.class.getClassLoader().getResourceAsStream(image_name);
 	}
 
 }
