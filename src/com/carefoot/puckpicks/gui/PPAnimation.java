@@ -3,7 +3,6 @@ package com.carefoot.puckpicks.gui;
 import javafx.animation.FadeTransition;
 import javafx.animation.RotateTransition;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
 import javafx.util.Duration;
 
 /*
@@ -35,16 +34,16 @@ public class PPAnimation {
 	 * @param button Button to animate
 	 * @param durationMillis Duration of the animation in milliseconds
 	 */
-	public static void animateButtonHover(Button button, double durationMillis) {
+	public static void animateHover(Node node, double durationMillis) {
 		FadeTransition fadeOut = new FadeTransition(Duration.millis(durationMillis));
-		fadeOut.setNode(button);
+		fadeOut.setNode(node);
 		fadeOut.setToValue(0.5);
-		button.setOnMouseEntered(e -> fadeOut.playFromStart());
+		node.setOnMouseEntered(e -> fadeOut.playFromStart());
 		
 		FadeTransition fadeIn = new FadeTransition(Duration.millis(durationMillis));
-		fadeIn.setNode(button);
+		fadeIn.setNode(node);
 		fadeIn.setToValue(1);
-		button.setOnMouseExited(e -> fadeIn.playFromStart());
+		node.setOnMouseExited(e -> fadeIn.playFromStart());
 	}
 
 }

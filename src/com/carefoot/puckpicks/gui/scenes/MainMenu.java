@@ -6,7 +6,6 @@ import com.carefoot.puckpicks.main.AppLauncher;
 
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
@@ -33,7 +32,7 @@ public class MainMenu extends PPScene {
 
 	@Override
 	public void build() {
-		setScene(new Scene(assembleContent(), 500d, 500d));
+		createScene(assembleContent(), 500d, 500d);
 	}
 	
 	/**
@@ -75,9 +74,9 @@ public class MainMenu extends PPScene {
 	 */
 	private void addButtonToGrid(String label, PPScene loadScene, int row, int column) {
 		Button button = new Button(label);
-		PPAnimation.animateButtonHover(button, 100);
+		PPAnimation.animateHover(button, 100);
 		button.setOnAction((e) -> {
-			AppLauncher.getApp().setScene(loadScene);
+			AppLauncher.getApp().setScene(loadScene, false);
 		});
 		buttons.add(button, column, row);
 	}

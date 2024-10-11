@@ -2,6 +2,7 @@ package com.carefoot.puckpicks.gui;
 
 import java.io.InputStream;
 
+import com.carefoot.puckpicks.main.AppLauncher;
 import com.carefoot.puckpicks.main.PuckPicks;
 
 import javafx.scene.image.Image;
@@ -20,6 +21,7 @@ import javafx.scene.text.Text;
 public class PPGui {
 	
 	private static final String ERROR_SYMBOL_IMAGE = "error.png";
+	private static final String BACK_ARROW_IMAGE = "back_arrow.png";
 	
 	/**
 	 * Creates a Text node with an included CSS style class
@@ -121,6 +123,21 @@ public class PPGui {
 	public static ImageView errorSymbol(double height, double width) {
 		ImageView image = imageResource(ERROR_SYMBOL_IMAGE, height, width, true);
 		return image;
+	}
+	
+	/**
+	 * Get an interactable ImageView that functions as a back arrow in the application
+	 * @param height ImageView height
+	 * @param width ImageView width 
+	 * @return ImageView with listener
+	 */
+	public static ImageView backArrow(double height, double width) {
+		ImageView arrowImage = imageResource(BACK_ARROW_IMAGE, height, width, true);
+		PPAnimation.animateHover(arrowImage, 100);
+		arrowImage.setOnMouseClicked((e) -> {
+			AppLauncher.getApp().goBack();
+		});
+		return arrowImage;
 	}
 
 }

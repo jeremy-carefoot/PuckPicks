@@ -1,6 +1,13 @@
 package com.carefoot.puckpicks.gui.scenes;
 
+import com.carefoot.puckpicks.gui.PPGui;
+import com.carefoot.puckpicks.main.AppLauncher;
+
+import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.StackPane;
 
 public abstract class PPScene {
 	
@@ -22,12 +29,24 @@ public abstract class PPScene {
 	 * Sets the JavaFX scene object, marks scene as initialized, and loads scene CSS
 	 * @param scene JavaFX scene object
 	 */
-	protected void setScene(Scene scene) {
-		if (scene != null) {
-			this.scene = scene;
+	protected void createScene(Node node, double width, double height) {
+		if (node != null) {
+			/*
+			 * Create scene object and include back arrow in corner (if PPScene is indicated as navigable)
+			 */
+			StackPane basePane = new StackPane();
+			if (isNavigable() && AppLauncher.getApp().availablePreviousState()) {// if the PPScene is navigable and there is a previous state for back arrow
+				ImageView backArrow = PPGui.backArrow(70,  70);
+				StackPane.setAlignment(backArrow, Pos.TOP_LEFT); 	// set the arrow to top left of window
+				basePane.getChildren().addAll(node, backArrow);
+			} else {
+				basePane.getChildren().add(node);
+			}
+			
+			this.scene = new Scene(basePane, width, height);
 			initialized = true;
 		} else {
-			throw new IllegalArgumentException("Scene cannot be null");
+			throw new IllegalArgumentException("Base node cannot be null!");
 		}
 		
 		if (css != null) // add scene-specific css if available

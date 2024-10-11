@@ -20,15 +20,17 @@ public class PPApplication {
 	private final Stage stage;
 	private final LoadingScene loading;
 	private final StateManager stateManager;
+	private PPScene current;
 	
 	public PPApplication(Stage stage) {
 		this.stage = stage;
+		current = null;
 		loading = new LoadingScene();
 		stateManager = new StateManager();
 
 		/* Constructing loading scene and enabling until first scene is set */
 		loading.build();
-		loading();
+		stage.setScene(loading.scene()); // don't use loading() method here as app is starting up and we dont need async update
 
 		/* Configuring application window */
 		configureOSWindow();
@@ -70,7 +72,7 @@ public class PPApplication {
 	 * Enables the loading screen until scene is updated
 	 */
 	public void loading() {
-		setScene(loading);
+		Platform.runLater(() -> stage.setScene(loading.scene()));
 	}
 
 	/**
@@ -94,11 +96,12 @@ public class PPApplication {
 	 * Loads the scene asynchronously if it hasn't been built yet.
 	 * If the scene is built, immediately updates the application.
 	 * @param scene PPScene object (does not have to be initialized)
+	 * @param goingBack Whether this scene change is due to back arrow (prevent infinite loops)
 	 */
-	public void setScene(PPScene scene) {
-		/* If the scene is considered navigable, log it for access with navigation back arrow */
-		if (scene.isNavigable())
-			stateManager.logState(scene);
+	public void setScene(PPScene scene, boolean goingBack) {
+		/* If the (now) previous scene is considered navigable, log it for access with navigation back arrow */
+		if (current != null && current.isNavigable() && !goingBack)
+			stateManager.logState(current);
 
 		/* Build and update the scene */
 		if (!scene.initialized()) {
@@ -110,6 +113,18 @@ public class PPApplication {
 		} else {
 			stage.setScene(scene.scene());
 		}
+		
+		current = scene; 	// update the current PPScene instance
+	}
+	
+	/**
+	 * Returns true if there is a previous state currently available within the StateManager
+	 * (i.e if there is somewhere a back arrow can take you)
+	 * @param current The current PPScene instance
+	 * @return True or false
+	 */
+	public boolean availablePreviousState() {
+		return !stateManager.isEmpty();
 	}
 	
 	/**
@@ -119,7 +134,7 @@ public class PPApplication {
 	public void goBack() {
 		PPScene previous = stateManager.getAndEjectPrevious();
 		if (previous != null) 	// do nothing if no valid previous scene
-			setScene(previous);
+			setScene(previous, true);
 	}
 	
 	/**
@@ -136,6 +151,14 @@ public class PPApplication {
 	 */
 	public Scene getScene() {
 		return stage.getScene();
+	}
+	
+	/**
+	 * Gets instance of current PPScene wrapper
+	 * @return PPScene object
+	 */
+	public PPScene getPPScene() {
+		return current;
 	}
 
 }

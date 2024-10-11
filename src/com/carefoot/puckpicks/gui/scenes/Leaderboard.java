@@ -21,7 +21,6 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListView;
@@ -79,8 +78,7 @@ public class Leaderboard extends PPScene {
 	
 	@Override
 	public void build() {		
-		Scene scene = new Scene(assembleContent(), 500d, 500d);		
-		setScene(scene);
+		createScene(assembleContent(), 500d, 500d);		
 		buildSkaterList(categorySelect.getValue(), Integer.parseInt(limitSelect.getValue()));
 	}
 	
@@ -89,7 +87,7 @@ public class Leaderboard extends PPScene {
 	 * All components are constructed here (except for the player list).
 	 * @return Parent node with scene content
 	 */
-	private Parent assembleContent() {
+	private Parent assembleContent() {	
 		VBox vbox = new VBox();
 		HBox titleSection = buildTitleSection("Leaderboards");
 		HBox buttonSection = buildButtonSection();
@@ -98,7 +96,6 @@ public class Leaderboard extends PPScene {
 		Region spacer2 = PPGui.filler(false, 15);
 		
 		vbox.getChildren().addAll(titleSection, buttonSection, spacer1, dropdownSection, spacer2, list);
-
 		return vbox;
 	}
 	
@@ -122,13 +119,13 @@ public class Leaderboard extends PPScene {
 		hbox.setAlignment(Pos.CENTER);
 		
 		Button viewPlayers = new Button("Player Leaderboard");
-		PPAnimation.animateButtonHover(viewPlayers, 100);
+		PPAnimation.animateHover(viewPlayers, 100);
 		viewPlayers.setOnAction((e) -> {
 			onButtonPress(viewPlayers);
 		});
 
 		Button viewGoalies = new Button("Goalie Leaderboard");
-		PPAnimation.animateButtonHover(viewGoalies, 100);
+		PPAnimation.animateHover(viewGoalies, 100);
 		viewGoalies.setOnAction((e) -> {
 			onButtonPress(viewGoalies);
 		});

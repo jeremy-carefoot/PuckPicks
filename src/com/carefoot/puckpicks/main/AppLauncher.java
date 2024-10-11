@@ -20,7 +20,7 @@ public class AppLauncher extends Application {
 	public void start(Stage stage) throws Exception {
 		app = new PPApplication(stage); 	// create new PuckPicks application wrapper class
 		app.open();
-		app.setScene(new MainMenu()); 	// present user with main menu on application start
+		app.setScene(new MainMenu(), false); 	// present user with main menu on application start
 	}
 	
 	public static void main(String[] args) {

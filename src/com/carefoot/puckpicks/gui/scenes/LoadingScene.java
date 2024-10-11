@@ -5,7 +5,6 @@ import com.carefoot.puckpicks.gui.PPGui;
 
 import javafx.animation.Animation;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
@@ -22,7 +21,7 @@ public class LoadingScene extends PPScene {
 	
 	@Override
 	public void build() {		
-		setScene(new Scene(assembleContent(), 500d, 500d));
+		createScene(assembleContent(), 500d, 500d);
 	}
 	
 	/**
