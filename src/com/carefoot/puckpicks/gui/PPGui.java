@@ -21,7 +21,8 @@ import javafx.scene.text.Text;
 public class PPGui {
 	
 	private static final String ERROR_SYMBOL_IMAGE = "error.png";
-	private static final String BACK_ARROW_IMAGE = "back_arrow.png";
+	private static final String BACK_ARROW_STATIC = "back_arrow.png";
+	private static final String BACK_ARROW_HOVER = "back_arrow_hover.png";
 	
 	/**
 	 * Creates a Text node with an included CSS style class
@@ -132,12 +133,27 @@ public class PPGui {
 	 * @return ImageView with listener
 	 */
 	public static ImageView backArrow(double height, double width) {
-		ImageView arrowImage = imageResource(BACK_ARROW_IMAGE, height, width, true);
-		PPAnimation.animateHover(arrowImage, 100);
-		arrowImage.setOnMouseClicked((e) -> {
+		ImageView arrowView = imageResource(BACK_ARROW_STATIC, height, width, true); 	// constructed with static (non hover) image
+		Image arrowHoverImage = new Image(PuckPicks.getImageResource(BACK_ARROW_HOVER)); 	// Image to dynamically switch ImageView on hover
+		Image arrowStaticImage = new Image(PuckPicks.getImageResource(BACK_ARROW_STATIC)); 	// Image to dynamically switch ImageView when static
+		
+		/* add image hover animation */
+//		FadeTransition fadeOut = PPAnimation.fade(arrowView, 200, 0);
+//		FadeTransition fadeIn = PPAnimation.fade(arrowView, 200, 1);
+		arrowView.setOnMouseEntered((e) -> {
+			arrowView.setImage(arrowHoverImage);
+//			fadeOut.play();
+		});
+		arrowView.setOnMouseExited((e)-> {
+			arrowView.setImage(arrowStaticImage);
+//			fadeIn.play();
+		});
+		
+		/* add on-click action listener */
+		arrowView.setOnMouseClicked((e) -> {
 			AppLauncher.getApp().goBack();
 		});
-		return arrowImage;
+		return arrowView;
 	}
 
 }

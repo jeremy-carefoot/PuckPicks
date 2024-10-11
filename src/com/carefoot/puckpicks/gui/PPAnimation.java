@@ -29,21 +29,31 @@ public class PPAnimation {
 	}
 	
 	/**
-	 * Gives a button hover animation to provided button
+	 * Gives a node hover animation to provided node
 	 * 
 	 * @param button Button to animate
 	 * @param durationMillis Duration of the animation in milliseconds
 	 */
 	public static void animateHover(Node node, double durationMillis) {
-		FadeTransition fadeOut = new FadeTransition(Duration.millis(durationMillis));
-		fadeOut.setNode(node);
-		fadeOut.setToValue(0.5);
+		FadeTransition fadeOut = fade(node, durationMillis, 0.5);
 		node.setOnMouseEntered(e -> fadeOut.playFromStart());
 		
-		FadeTransition fadeIn = new FadeTransition(Duration.millis(durationMillis));
-		fadeIn.setNode(node);
-		fadeIn.setToValue(1);
+		FadeTransition fadeIn = fade(node, durationMillis, 1);
 		node.setOnMouseExited(e -> fadeIn.playFromStart());
+	}
+	
+	/**
+	 * Constructs a FadeTransition with provided parameters 
+	 * @param node Node for transition
+	 * @param durationMillis Duration of the transition in ms
+	 * @param opacity What opacity to fade to
+	 * @return FadeTransition object
+	 */
+	public static FadeTransition fade(Node node, double durationMillis, double opacity) {
+		FadeTransition transition = new FadeTransition(Duration.millis(durationMillis));
+		transition.setNode(node);
+		transition.setToValue(opacity);
+		return transition;
 	}
 
 }
