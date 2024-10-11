@@ -88,3 +88,10 @@
 	-fx-padding: 10px 20px;
 	-fx-font-size: 18px;
 }
+
+/*
+* Back Arrow
+*/
+.back-arrow {
+	-fx-padding: 8px 0 0 8px;
+}

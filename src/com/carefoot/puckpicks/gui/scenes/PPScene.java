@@ -6,7 +6,6 @@ import com.carefoot.puckpicks.main.AppLauncher;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 
 public abstract class PPScene {
@@ -36,8 +35,9 @@ public abstract class PPScene {
 			 */
 			StackPane basePane = new StackPane();
 			if (isNavigable() && AppLauncher.getApp().availablePreviousState()) {// if the PPScene is navigable and there is a previous state for back arrow
-				ImageView backArrow = PPGui.backArrow(70,  70);
-				StackPane.setAlignment(backArrow, Pos.TOP_LEFT); 	// set the arrow to top left of window
+				StackPane backArrow = PPGui.backArrow(50, 50);
+				StackPane.setAlignment(backArrow, Pos.TOP_LEFT); 	// set alignment of back arrow to top left of window
+				
 				basePane.getChildren().addAll(node, backArrow);
 			} else {
 				basePane.getChildren().add(node);

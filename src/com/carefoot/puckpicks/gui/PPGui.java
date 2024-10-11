@@ -5,11 +5,13 @@ import java.io.InputStream;
 import com.carefoot.puckpicks.main.AppLauncher;
 import com.carefoot.puckpicks.main.PuckPicks;
 
+import javafx.animation.FadeTransition;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
+import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 
 /**
@@ -127,33 +129,45 @@ public class PPGui {
 	}
 	
 	/**
-	 * Get an interactable ImageView that functions as a back arrow in the application
+	 * Get a StackPane containing an animated back arrow for navigation in the application.
+	 * Configured listener for taking back to previous state of the application on-click.
+	 * 
 	 * @param height ImageView height
-	 * @param width ImageView width 
-	 * @return ImageView with listener
+	 * @param width ImageView width
+	 * @return StackPane containing ImageView objects
 	 */
-	public static ImageView backArrow(double height, double width) {
-		ImageView arrowView = imageResource(BACK_ARROW_STATIC, height, width, true); 	// constructed with static (non hover) image
-		Image arrowHoverImage = new Image(PuckPicks.getImageResource(BACK_ARROW_HOVER)); 	// Image to dynamically switch ImageView on hover
-		Image arrowStaticImage = new Image(PuckPicks.getImageResource(BACK_ARROW_STATIC)); 	// Image to dynamically switch ImageView when static
+	public static StackPane backArrow(double height, double width) {
+		ImageView arrowStaticView = imageResource(BACK_ARROW_STATIC, 50, 50, true); 	// constructed with static (non hover) image
+		ImageView arrowHoverView = imageResource(BACK_ARROW_HOVER, 50, 50, true); 	// Image to dynamically switch ImageView on hover
 		
-		/* add image hover animation */
-//		FadeTransition fadeOut = PPAnimation.fade(arrowView, 200, 0);
-//		FadeTransition fadeIn = PPAnimation.fade(arrowView, 200, 1);
-		arrowView.setOnMouseEntered((e) -> {
-			arrowView.setImage(arrowHoverImage);
-//			fadeOut.play();
-		});
-		arrowView.setOnMouseExited((e)-> {
-			arrowView.setImage(arrowStaticImage);
-//			fadeIn.play();
+		StackPane container = new StackPane();
+		container.getStyleClass().add("back-arrow");
+		
+		/* Set container width/height to 0 so that panes behind in z-level are still interactable */
+		container.setMaxHeight(0);
+		container.setMaxWidth(0);
+		
+		/*
+		 * Animation functions by having the "hover image" rendered behind the "static image"
+		 * On mouse enter and exit, the opacity of the "static" image is manipulated to reveal the "hover image"
+		 */
+		FadeTransition fadeOut = PPAnimation.fade(arrowStaticView, 125, 0);
+		FadeTransition fadeIn = PPAnimation.fade(arrowStaticView, 125, 1);
+		
+		/* Set animation and action listeners */
+		arrowStaticView.setOnMouseEntered((e) -> {
+			fadeOut.play();
 		});
 		
-		/* add on-click action listener */
-		arrowView.setOnMouseClicked((e) -> {
+		arrowStaticView.setOnMouseExited((e) -> {
+			fadeIn.play();
+		});
+		arrowStaticView.setOnMouseClicked((e) -> {
 			AppLauncher.getApp().goBack();
 		});
-		return arrowView;
+		
+		container.getChildren().addAll(arrowHoverView, arrowStaticView);
+		return container;
 	}
 
 }
