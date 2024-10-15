@@ -1,6 +1,13 @@
 .root {
-	-fx-background-color: rgb(50, 50, 50);
-	-fx-text-fill: rgb(154, 185, 184);
+	/*
+	* Theme Colors
+	*/
+	-fx-primary: rgb(154, 185, 184);
+	-fx-gray-bg: rgb(50, 50, 50);
+
+	/* Root CSS */
+	-fx-background-color: -fx-gray-bg;
+	-fx-text-fill: -fx-primary;
 }
 
 /*
@@ -8,7 +15,7 @@
 */
 .h2 {
 	-fx-font-size: 15px;
-	-fx-fill: rgb(154, 185, 184);
+	-fx-fill: -fx-primary;
 	-fx-font-weight: bold;
 }
 .h2-dark {
@@ -28,7 +35,7 @@
 * List
 */
 .list-cell {
-	-fx-background-color: rgb(50, 50, 50);
+	-fx-background-color: -fx-gray-bg;
 }
 
 .list-cell:odd {
@@ -39,11 +46,11 @@
 * Scroll Bar
 */
 .scroll-bar {
-	-fx-background-color: rgb(50, 50, 50);
+	-fx-background-color: -fx-gray-bg;
 }
 
 .scroll-bar .thumb {
-	-fx-background-color: rgb(154, 185, 184);
+	-fx-background-color: -fx-primary;
 }
 
 .scroll-bar .increment-arrow,
@@ -62,17 +69,17 @@
 * Combo Box
 */
 .combo-box-base {
-	-fx-background-color: rgb(154, 185, 184);
+	-fx-background-color: -fx-primary;
 	-fx-background-insets: 0 0 0 0, 0, 1, 2;
 	-fx-border-width: 1;
-	-fx-border-color: rgb(154, 185, 184);
+	-fx-border-color: -fx-primary;
 	-fx-border-radius: 10px;
 	-fx-font-size: 13px;
 }
 
 .combo-box .list-cell {
 	-fx-background-color: rgb(40, 40, 40);
-	-fx-text-fill: rgb(154, 185, 184);
+	-fx-text-fill: -fx-primary;
 }
 
 .combo-box .list-view .cell:selected {
@@ -83,7 +90,7 @@
 * Button
 */
 .button {
-	-fx-background-color: rgb(154,185,184);
+	-fx-background-color: -fx-primary;
 	-fx-background-radius: 10px;
 	-fx-padding: 10px 20px;
 	-fx-font-size: 18px;

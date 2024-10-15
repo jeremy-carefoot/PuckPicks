@@ -1,6 +1,6 @@
 .title {
 	-fx-font-size: 28px;
-	-fx-fill: rgb(154, 185, 184);
+	-fx-fill: -fx-primary;
 	-fx-font-weight: bold;
 }
 
@@ -9,7 +9,7 @@
 }
 
 #player-list {
-	-fx-background-color: rgb(50, 50, 50);
+	-fx-background-color: -fx-gray-bg;
 	-fx-background-insets: 20px;
 }
 

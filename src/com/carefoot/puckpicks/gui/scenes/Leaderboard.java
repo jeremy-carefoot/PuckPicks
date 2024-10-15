@@ -120,13 +120,13 @@ public class Leaderboard extends PPScene {
 		hbox.setAlignment(Pos.CENTER);
 		
 		Button viewPlayers = new Button("Player Leaderboard");
-		PPAnimation.animateHover(viewPlayers, 100);
+		PPAnimation.animateHover(viewPlayers, 150);
 		viewPlayers.setOnAction((e) -> {
 			onButtonPress(viewPlayers);
 		});
 
 		Button viewGoalies = new Button("Goalie Leaderboard");
-		PPAnimation.animateHover(viewGoalies, 100);
+		PPAnimation.animateHover(viewGoalies, 150);
 		viewGoalies.setOnAction((e) -> {
 			onButtonPress(viewGoalies);
 		});

@@ -151,8 +151,8 @@ public class PPGui {
 		 * Animation functions by having the "hover image" rendered behind the "static image"
 		 * On mouse enter and exit, the opacity of the "static" image is manipulated to reveal the "hover image"
 		 */
-		FadeTransition fadeOut = PPAnimation.fade(arrowStaticView, 125, 0);
-		FadeTransition fadeIn = PPAnimation.fade(arrowStaticView, 125, 1);
+		FadeTransition fadeOut = PPAnimation.fade(arrowStaticView, 200, 0);
+		FadeTransition fadeIn = PPAnimation.fade(arrowStaticView, 200, 1);
 		
 		/* Set animation and action listeners */
 		arrowStaticView.setOnMouseEntered((e) -> {
