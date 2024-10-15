@@ -47,7 +47,8 @@ public class Leaderboard extends PPScene {
 			"15",
 			"20",
 			"50",
-			"100"
+			"100",
+			"500"
 	};
 	private final DataManager dataManager; 		// DataManager instance for getting skater data
 
