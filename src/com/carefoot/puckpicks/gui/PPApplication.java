@@ -13,6 +13,12 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
+/**
+ * Primary application instance class. Acts as a wrapper for JavaFX Stage object
+ * 
+ * @author jeremycarefoot
+ *
+ */
 public class PPApplication {
 	
 	private static final String APP_ICON_FILE = "icon.png"; 		// image file for application icon

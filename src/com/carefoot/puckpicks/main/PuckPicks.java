@@ -2,11 +2,12 @@ package com.carefoot.puckpicks.main;
 
 import java.io.InputStream;
 
+/**
+ * Static class with basic utility methods
+ * 
+ * @author jeremycarefoot
+ */
 public class PuckPicks {
-	
-	/*
-	 * Class with static utilities methods
-	 */
 	
 	/**
 	 * Capitalize the first letter in a string (lowercases rest)

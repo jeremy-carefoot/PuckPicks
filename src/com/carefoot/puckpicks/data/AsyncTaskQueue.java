@@ -5,6 +5,13 @@ import java.util.Queue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+/**
+ * Allows you to queue asynchronous tasks for execution by a threadpool,
+ * which can then be flushed and shutdown
+ * 
+ * @author jeremycarefoot
+ *
+ */
 public class AsyncTaskQueue {
 	
 	private int threads;
