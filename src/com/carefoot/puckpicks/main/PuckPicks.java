@@ -1,6 +1,8 @@
 package com.carefoot.puckpicks.main;
 
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map.Entry;
 
 /**
  * Static class with basic utility methods
@@ -28,5 +30,18 @@ public class PuckPicks {
 	public static InputStream getImageResource(String image_name) {
 		return PuckPicks.class.getClassLoader().getResourceAsStream(image_name);
 	}
-
+	
+	/**
+	 * Takes a collection of URL parameters in a HashMap format, and translates them into a URL-appendable String (with ?)
+	 * @param params HashMap<String, String> of parameters, each in name:value format
+	 * @return URL-appendable String
+	 */
+	public static String paramsToUrl(HashMap<String, String> params) {
+		String output = "?";
+		
+		for (Entry<String, String> param : params.entrySet()) {
+			output += param.getKey() + "=" + param.getValue() + "&";
+		}
+		return output.substring(0, output.length()-1); 		// Don't include the final ampersand
+	} 
 }
