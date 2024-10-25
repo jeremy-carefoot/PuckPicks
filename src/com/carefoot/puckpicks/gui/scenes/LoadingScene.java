@@ -15,7 +15,7 @@ public class LoadingScene extends PPScene {
 	private Text loadStatus;
 	
 	public LoadingScene() {
-		super("loading.css", false);
+		super("loading.css", false, false);
 		loadStatus = null;
 	}
 	

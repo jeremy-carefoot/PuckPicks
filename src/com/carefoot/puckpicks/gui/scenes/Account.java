@@ -18,7 +18,7 @@ import javafx.scene.web.WebView;
 public class Account extends PPScene {
 	
 	public Account() {
-		super(null, true);
+		super(null, true, true);
 	}
 
 	@Override

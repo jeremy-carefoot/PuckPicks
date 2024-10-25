@@ -5,10 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
+import java.net.*;
 import java.util.Map.Entry;
 
 import org.json.JSONObject;
@@ -46,12 +43,15 @@ public class DataManager {
 
 		URL url = new URI(baseUrl + req.requestSubUrl()).toURL();
 		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-		connection.setRequestMethod("GET");				
+		connection.setRequestMethod("GET");
+
+		/* read the HTTP response (plaintext) */
+		String raw_response = readInputStream(connection.getInputStream());
 
 		if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-			response  = new JSONObject(readInputStream(connection.getInputStream()));
+			response  = new JSONObject(raw_response);
 		} else {
-			throw new IOException(readInputStream(connection.getInputStream()));
+			throw new IOException(raw_response);
 		}
 		
 		return response;
@@ -62,9 +62,11 @@ public class DataManager {
 	 * Returns the response
 	 * @param req Valid PostRequest
 	 * @return Response in String format
-	 * @throws Exception Failed request or unexpected response
+	 * @throws URISyntaxException URL could not be parsed
+	 * @throws MalformedURLException Invalid protocol or URL could not be parsed
+	 * @throws IOException An I/O error occurred (could be communication with server)
 	 */
-	public String submitPost(PostRequest req) throws Exception {
+	public String submitPost(PostRequest req) throws URISyntaxException, MalformedURLException, IOException {
 		URL url = new URI(baseUrl + req.requestSubUrl()).toURL();
 		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 		connection.setRequestMethod("POST");

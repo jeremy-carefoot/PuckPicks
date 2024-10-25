@@ -2,6 +2,7 @@ package com.carefoot.puckpicks.main;
 
 import com.carefoot.puckpicks.gui.PPApplication;
 import com.carefoot.puckpicks.gui.scenes.Account;
+import com.carefoot.puckpicks.gui.scenes.MainMenu;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -20,8 +21,8 @@ public class AppLauncher extends Application {
 	public void start(Stage stage) throws Exception {
 		app = new PPApplication(stage); 	// create new PuckPicks application wrapper class
 		app.open();
-//		app.setScene(new MainMenu(), false); 	// present user with main menu on application start
-		debug();
+		app.setScene(new MainMenu(), false); 	// present user with main menu on application start
+//		debug();
 	}
 	
 	public static void main(String[] args) {

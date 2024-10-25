@@ -25,14 +25,17 @@ public class PPApplication {
 	
 	private final Stage stage;
 	private final LoadingScene loading;
-	private final StateManager stateManager;
+	private final StateManager stateManager; 	// StateManager for logging scenes and going back in app
+	private final PPTaskbar taskbar; 	// taskbar at top of application
 	private PPScene current;
 	
 	public PPApplication(Stage stage) {
 		this.stage = stage;
 		current = null;
-		loading = new LoadingScene();
+		/* taskbar should be constructed first as other scenes are dependent on it */
+		taskbar = new PPTaskbar();
 		stateManager = new StateManager();
+		loading = new LoadingScene();
 
 		/* Constructing loading scene and enabling until first scene is set */
 		loading.build();
@@ -157,6 +160,14 @@ public class PPApplication {
 	 */
 	public Scene getScene() {
 		return stage.getScene();
+	}
+	
+	/**
+	 * Gets the taskbar instance (top of application)
+	 * @return PPTaskbar object
+	 */
+	public PPTaskbar getTaskbar() {
+		return taskbar;
 	}
 	
 	/**

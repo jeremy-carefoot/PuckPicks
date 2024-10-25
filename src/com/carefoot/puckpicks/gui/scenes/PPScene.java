@@ -1,9 +1,8 @@
 package com.carefoot.puckpicks.gui.scenes;
 
-import com.carefoot.puckpicks.gui.PPGui;
+import com.carefoot.puckpicks.gui.PPTaskbar;
 import com.carefoot.puckpicks.main.AppLauncher;
 
-import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;
@@ -16,12 +15,20 @@ public abstract class PPScene {
 	private String css;
 	private boolean initialized; 		// whether the scene has been constructed (or initialized)
 	private boolean navigable; 	// whether the scene should be logged for navigation (for use with back arrow)
+	private boolean includeTaskbar; 	// whether the application taskbar should be shown at the top of the screen
 	
-	public PPScene(String css, boolean navigable) {
+	/**
+	 * Default constructor for a scene in the PuckPicks application
+	 * @param css (optional) Name of scene-specific CSS file <i>(If not applicable, set to null)</i>
+	 * @param navigable Whether this scene should be supported by app navigation (back arrow etc.)
+	 * @param includeTaskbar Whether the application taskbar should be included at the top of the scene
+	 */
+	public PPScene(String css, boolean navigable, boolean includeTaskbar) {
 		scene = null;
 		initialized = false;
 		this.css = css;
 		this.navigable = navigable;
+		this.includeTaskbar = includeTaskbar;
 	}
 	
 	/**
@@ -31,16 +38,19 @@ public abstract class PPScene {
 	protected void createScene(Node node, double width, double height) {
 		if (node != null) {
 			/*
-			 * Create scene object and include back arrow in corner (if PPScene is indicated as navigable)
+			 * Create scene object and append the application taskbar to the top
 			 */
 			StackPane basePane = new StackPane();
-			if (isNavigable() && AppLauncher.getApp().availablePreviousState()) {// if the PPScene is navigable and there is a previous state for back arrow
-				StackPane backArrow = PPGui.backArrow(50, 50);
-				StackPane.setAlignment(backArrow, Pos.TOP_LEFT); 	// set alignment of back arrow to top left of window
-				
-				basePane.getChildren().addAll(node, backArrow);
-			} else {
-				basePane.getChildren().add(node);
+			basePane.getChildren().add(node);
+
+			// TODO debug and fix taskbar
+			if (AppLauncher.getApp() != null && includeTaskbar()) {// if application is initialized and taskbar should be shown
+				PPTaskbar taskbar = AppLauncher.getApp().getTaskbar();
+
+				/* Update the taskbar to display relevant scene information) */
+				taskbar.update(this);
+
+				basePane.getChildren().add(taskbar.getContainer());
 			}
 			
 			this.scene = new Scene(basePane, width, height);
@@ -70,6 +80,14 @@ public abstract class PPScene {
 	 */
 	public boolean initialized() {
 		return initialized;
+	}
+	
+	/**
+	 * Returns whether or not the taskbar should be included in the top of the scene
+	 * @return True or false
+	 */
+	public boolean includeTaskbar() {
+		return includeTaskbar;
 	}
 	
 	/**

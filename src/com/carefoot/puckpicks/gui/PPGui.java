@@ -137,15 +137,11 @@ public class PPGui {
 	 * @return StackPane containing ImageView objects
 	 */
 	public static StackPane backArrow(double height, double width) {
-		ImageView arrowStaticView = imageResource(BACK_ARROW_STATIC, 50, 50, true); 	// constructed with static (non hover) image
-		ImageView arrowHoverView = imageResource(BACK_ARROW_HOVER, 50, 50, true); 	// Image to dynamically switch ImageView on hover
+		ImageView arrowStaticView = imageResource(BACK_ARROW_STATIC, height, width, true); 	// constructed with static (non hover) image
+		ImageView arrowHoverView = imageResource(BACK_ARROW_HOVER, height, width, true); 	// Image to dynamically switch ImageView on hover
 		
 		StackPane container = new StackPane();
 		container.getStyleClass().add("back-arrow");
-		
-		/* Set container width/height to 0 so that panes behind in z-level are still interactable */
-		container.setMaxHeight(0);
-		container.setMaxWidth(0);
 		
 		/*
 		 * Animation functions by having the "hover image" rendered behind the "static image"

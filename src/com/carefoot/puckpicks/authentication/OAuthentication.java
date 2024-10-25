@@ -16,7 +16,10 @@ import com.carefoot.puckpicks.main.PuckPicks;
 /**
  * Object created to oversee a Yahoo Fantasy OAuthentication.
  * Communicates with the official PuckPicks server to retrieve OAuth information.
- * A new OAuthentication request <b>expires</b>
+ * Then login should be handled; once user login is complete, fetches an access token from the PuckPicks server.
+ * Then request can be sent to Yahoo token endpoint for the access token
+ * 
+ * <b>A new OAuthentication request expires after user-login (typically 60 seconds)</b>
  * 
  * @author jeremycarefoot
  */
@@ -120,6 +123,11 @@ public class OAuthentication {
 		return code_response.getString("access_code");
 	}
 	
+	/**
+	 * Create a PostRequest for the token endpoint
+	 * @param authCode authorization code fetched from PuckPicks server
+	 * @return PostRequest object
+	 */
 	private PostRequest assembleTokenRequest(String authCode) {
 		PostRequest req  = new PostRequest();
 		req.addHeader("Content-Type", "application/x-www-form-urlencoded");

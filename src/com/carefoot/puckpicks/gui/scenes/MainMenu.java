@@ -26,7 +26,7 @@ public class MainMenu extends PPScene {
 	private GridPane buttons;
 	
 	public MainMenu() {
-		super(null, true);
+		super(null, true, true);
 		buttons = new GridPane();
 	}
 
