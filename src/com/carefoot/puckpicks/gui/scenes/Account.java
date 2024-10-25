@@ -1,12 +1,13 @@
 package com.carefoot.puckpicks.gui.scenes;
 
-import java.io.UnsupportedEncodingException;
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.security.NoSuchAlgorithmException;
-import java.util.HashMap;
 
-import com.carefoot.puckpicks.authentication.PKCEHandler;
-import com.carefoot.puckpicks.main.PuckPicks;
+import com.carefoot.puckpicks.authentication.OAuthentication;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
@@ -15,10 +16,6 @@ import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 
 public class Account extends PPScene {
-	
-	public static final String CLIENT_ID = "dj0yJmk9VjhjWWFrQzhoSWJXJmQ9WVdrOVpXRTRNMHhqUW1rbWNHbzlNQT09JnM9Y29uc3VtZXJzZWNyZXQmc3Y9MCZ4PWJl";
-	public static final String AUTH_URL = "https://api.login.yahoo.com/oauth2/request_auth";
-	public static final String REDIRECT_URL = "https://grown-willingly-treefrog.ngrok-free.app/";
 	
 	public Account() {
 		super(null, true);
@@ -33,42 +30,40 @@ public class Account extends PPScene {
 		VBox root = new VBox();
 		root.setAlignment(Pos.CENTER);
 		Button login = new Button("Login");
-		
-		login.setOnAction((e) -> {
-			WebView webView = new WebView();
-			WebEngine webEngine = webView.getEngine();
-			webEngine.load(AUTH_URL + PuckPicks.paramsToUrl(authenticationParams()));
-			System.out.println(AUTH_URL + PuckPicks.paramsToUrl(authenticationParams()));
-			root.getChildren().add(webView);
-		});
-		
-		root.getChildren().add(login);
-		return root;
-	}
-	
-	private HashMap<String, String> authenticationParams() {
-		String codeVerifier = PKCEHandler.generateSecureCode(43);
-		String stateCode = PKCEHandler.generateSecureCode(16);
-		String codeChallenge;
+		OAuthentication auth;
 		try {
-			codeChallenge = PKCEHandler.generateCodeChallenge(codeVerifier);
-		} catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
+			auth = new OAuthentication();
+		} catch (NoSuchAlgorithmException | IOException | URISyntaxException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return null;
 		}
 		
-		HashMap<String, String> params = new HashMap<>();
-		params.put("client_id", CLIENT_ID);
-		params.put("redirect_uri", REDIRECT_URL);
-		params.put("language", "en-us");
-		params.put("response_type", "code");
-		params.put("code_challenge", codeChallenge);
-		params.put("code_challenge_method", "S256");
-		params.put("state", stateCode);
+		login.setOnAction((e) -> {
+			WebView webView = new WebView();
+			WebEngine webEngine = webView.getEngine();
+			webEngine.load(auth.getAuthenticationUrl());
+			root.getChildren().add(webView);			
+			webEngine.locationProperty().addListener(new ChangeListener<String>() {
+				@Override
+				public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+					if (newValue.contains(OAuthentication.SERVER_DNS)) {
+						new Thread(() -> {
+							try {
+								Thread.sleep(3000);
+								auth.fetchToken();
+							} catch (Exception e) {
+								e.printStackTrace();
+							}	
+						}).start();
+					}
+				}	
+			});
+
+		});
 		
-		
-		return params;
-		
+		root.getChildren().add(login);
+		return root;
 	}
 
 }

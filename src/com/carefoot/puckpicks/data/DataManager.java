@@ -4,11 +4,16 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.Map.Entry;
 
 import org.json.JSONObject;
+
+import com.carefoot.puckpicks.data.requests.PostRequest;
 
 /**
  * Class used to submit HTTP requests for data.
@@ -36,7 +41,7 @@ public class DataManager {
 	 * @param req DataRequest object containing request information
 	 * @return JSONObject containing data from NHL API
 	 */
-	public JSONObject submitRequest(DataRequest req) throws Exception {
+	public JSONObject submitRequest(DataRequest req) throws IOException, URISyntaxException {
 		JSONObject response = null;	
 
 		URL url = new URI(baseUrl + req.requestSubUrl()).toURL();
@@ -45,8 +50,44 @@ public class DataManager {
 
 		if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
 			response  = new JSONObject(readInputStream(connection.getInputStream()));
+		} else {
+			throw new IOException(readInputStream(connection.getInputStream()));
 		}
+		
 		return response;
+	}
+	
+	/**
+	 * Submits an HTTP Post request.
+	 * Returns the response
+	 * @param req Valid PostRequest
+	 * @return Response in String format
+	 * @throws Exception Failed request or unexpected response
+	 */
+	public String submitPost(PostRequest req) throws Exception {
+		URL url = new URI(baseUrl + req.requestSubUrl()).toURL();
+		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+		connection.setRequestMethod("POST");
+		connection.setDoOutput(true);
+
+		/* setup headers */
+		for (Entry<String, String> header : req.getHeaders().entrySet()) {
+			connection.setRequestProperty(header.getKey(), header.getValue());
+		}
+		
+		/* write content */
+		try (OutputStream os = connection.getOutputStream()) {
+			byte[] output  = req.getBody().getBytes("utf-8");
+			os.write(output, 0, output.length);
+		}
+		
+		/* return HTTP response, if applicable */
+		if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+			String response = readInputStream(connection.getInputStream());
+			return response;
+		} else {
+			throw new IOException("Request failed: " + Integer.toString(connection.getResponseCode()));
+		}
 	}
 	
 	/**

@@ -15,6 +15,7 @@ import java.util.Base64;
 public class PKCEHandler {
 	
 	private static final SecureRandom secureRandom = new SecureRandom();
+	public static final String CHALLENGE_METHOD = "S256"; 	// algorithm used to encrypt code challenge
 	
 	/**
 	 * Generates a cryptographically random string of characters for a code verifier, application state code, etc.
