@@ -4,6 +4,7 @@ import com.carefoot.puckpicks.gui.scenes.PPScene;
 import com.carefoot.puckpicks.main.AppLauncher;
 
 import javafx.geometry.Pos;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 
 /**
@@ -14,28 +15,29 @@ import javafx.scene.layout.StackPane;
  */
 public class PPTaskbar {
 	
-	private StackPane taskbarContainer;
+	private HBox taskbarContainer;
 	private StackPane backArrow;
-//	private StackPane account;
+	private StackPane account;
 	
 	public PPTaskbar() {
 		taskbarContainer = buildContainer();
 		backArrow = PPGui.backArrow(50, 50);
+		account = PPGui.accountIcon(35, 35);
 		buildTaskbar();
 	}
 	
 	/**
 	 * Complete the taskbar construction (should be called after other elements are built)
 	 */
-	private void buildTaskbar() {
-		taskbarContainer.getChildren().add(backArrow);
+	private void buildTaskbar() {	
+		taskbarContainer.getChildren().addAll(backArrow, PPGui.filler(true), account);
 	}
 	
 	/**
 	 * Returns the taskbar container
 	 * @return StackPane object
 	 */
-	public StackPane getContainer() {
+	public HBox getContainer() {
 		return taskbarContainer;
 	}
 	
@@ -55,15 +57,14 @@ public class PPTaskbar {
 	 * Builds the container for the taskbar
 	 * @return StackPane object with no dimensions
 	 */
-	private static StackPane buildContainer() {
-		StackPane container = new StackPane();
+	private static HBox buildContainer() {
+		HBox container = new HBox();
 		container.getStyleClass().add("pp-taskbar");
 		
 		/* Set dimensions to 0 so can be superimposed and not disturb lower z-levels */
 		container.setMaxHeight(0);
-		container.setMaxWidth(0);
 		
-		StackPane.setAlignment(container, Pos.TOP_LEFT);
+		StackPane.setAlignment(container, Pos.TOP_CENTER);
 		return container;
 	}
 	

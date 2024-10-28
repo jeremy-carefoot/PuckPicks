@@ -4,6 +4,7 @@ import java.awt.Taskbar;
 import java.awt.Taskbar.Feature;
 import java.awt.Toolkit;
 
+import com.carefoot.puckpicks.data.ResourcePath;
 import com.carefoot.puckpicks.gui.scenes.LoadingScene;
 import com.carefoot.puckpicks.gui.scenes.PPScene;
 import com.carefoot.puckpicks.main.PuckPicks;
@@ -20,8 +21,6 @@ import javafx.stage.Stage;
  *
  */
 public class PPApplication {
-	
-	private static final String APP_ICON_FILE = "icon.png"; 		// image file for application icon
 	
 	private final Stage stage;
 	private final LoadingScene loading;
@@ -54,12 +53,12 @@ public class PPApplication {
 		 * Update properties that are not OS-dependent first
 		 */
 		setTitle("PuckPicks");
-		setIcon(new Image(PuckPicks.getImageResource(APP_ICON_FILE)));
+		setIcon(new Image(PuckPicks.getImageResource(ResourcePath.APP_ICON)));
 		
 		if (Taskbar.isTaskbarSupported()) {// configure macOS and Linux taskbar (if applicable)
 			Taskbar bar = Taskbar.getTaskbar();
 			if (bar.isSupported(Feature.ICON_IMAGE))
-				bar.setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getClassLoader().getResource("icon.png")));
+				bar.setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getClassLoader().getResource(ResourcePath.APP_ICON.path())));
 		}
 	}
 	
@@ -117,12 +116,14 @@ public class PPApplication {
 			loading();
 			new Thread(() -> {
 				scene.build();
+				scene.attachTaskbar();
 				Platform.runLater(() -> stage.setScene(scene.scene()));
 			}).start();
 		} else {
+			scene.attachTaskbar();
 			stage.setScene(scene.scene());
-		}
-		
+		}		
+
 		current = scene; 	// update the current PPScene instance
 	}
 	
@@ -142,8 +143,10 @@ public class PPApplication {
 	 */
 	public void goBack() {
 		PPScene previous = stateManager.getAndEjectPrevious();
-		if (previous != null) 	// do nothing if no valid previous scene
+		if (previous != null) {// do nothing if no valid previous scene
 			setScene(previous, true);
+			taskbar.update(previous);
+		}
 	}
 	
 	/**

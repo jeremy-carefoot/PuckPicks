@@ -97,8 +97,12 @@
 }
 
 /*
-* Back Arrow
+* Taskbar
 */
-.back-arrow {
+.taskbar-back-arrow {
 	-fx-padding: 8px 0 0 8px;
+}
+
+.taskbar-account-icon {
+	-fx-padding: 10px 10px 0 0;
 }

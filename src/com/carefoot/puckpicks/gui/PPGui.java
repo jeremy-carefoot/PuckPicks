@@ -2,10 +2,10 @@ package com.carefoot.puckpicks.gui;
 
 import java.io.InputStream;
 
+import com.carefoot.puckpicks.data.ResourcePath;
 import com.carefoot.puckpicks.main.AppLauncher;
 import com.carefoot.puckpicks.main.PuckPicks;
 
-import javafx.animation.FadeTransition;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
@@ -21,10 +21,6 @@ import javafx.scene.text.Text;
  *
  */
 public class PPGui {
-	
-	private static final String ERROR_SYMBOL_IMAGE = "error.png";
-	private static final String BACK_ARROW_STATIC = "back_arrow.png";
-	private static final String BACK_ARROW_HOVER = "back_arrow_hover.png";
 	
 	/**
 	 * Creates a Text node with an included CSS style class
@@ -108,8 +104,8 @@ public class PPGui {
 	 * @param aspectRatio Whether to preserve image aspect ratio
 	 * @return ImageView object
 	 */
-	public static ImageView imageResource(String fileName, double height, double width, boolean aspectRatio) {
-		ImageView image = new ImageView(new Image(PuckPicks.getImageResource(fileName)));
+	public static ImageView imageResource(ResourcePath path, double height, double width, boolean aspectRatio) {
+		ImageView image = new ImageView(new Image(PuckPicks.getImageResource(path)));
 		image.setFitHeight(height);
 		image.setFitWidth(width);
 		image.setPreserveRatio(aspectRatio);
@@ -124,7 +120,7 @@ public class PPGui {
 	 * @return ImageView object of symbol
 	 */
 	public static ImageView errorSymbol(double height, double width) {
-		ImageView image = imageResource(ERROR_SYMBOL_IMAGE, height, width, true);
+		ImageView image = imageResource(ResourcePath.ERROR_ICON, height, width, true);
 		return image;
 	}
 	
@@ -137,33 +133,40 @@ public class PPGui {
 	 * @return StackPane containing ImageView objects
 	 */
 	public static StackPane backArrow(double height, double width) {
-		ImageView arrowStaticView = imageResource(BACK_ARROW_STATIC, height, width, true); 	// constructed with static (non hover) image
-		ImageView arrowHoverView = imageResource(BACK_ARROW_HOVER, height, width, true); 	// Image to dynamically switch ImageView on hover
+		ImageView arrowStaticView = imageResource(ResourcePath.BACK_ARROW, height, width, true); 	// constructed with static (non hover) image
+		ImageView arrowHoverView = imageResource(ResourcePath.BACK_ARROW_HOVER, height, width, true); 	// Image to dynamically switch ImageView on hover
 		
-		StackPane container = new StackPane();
-		container.getStyleClass().add("back-arrow");
+		StackPane arrowContainer = PPAnimation.dualStateImageHover(arrowStaticView, arrowHoverView, 200);
+		arrowContainer.getStyleClass().add("taskbar-back-arrow");
 		
-		/*
-		 * Animation functions by having the "hover image" rendered behind the "static image"
-		 * On mouse enter and exit, the opacity of the "static" image is manipulated to reveal the "hover image"
-		 */
-		FadeTransition fadeOut = PPAnimation.fade(arrowStaticView, 200, 0);
-		FadeTransition fadeIn = PPAnimation.fade(arrowStaticView, 200, 1);
-		
-		/* Set animation and action listeners */
-		arrowStaticView.setOnMouseEntered((e) -> {
-			fadeOut.play();
-		});
-		
-		arrowStaticView.setOnMouseExited((e) -> {
-			fadeIn.play();
-		});
-		arrowStaticView.setOnMouseClicked((e) -> {
+		arrowStaticView.setOnMouseClicked((e) -> {// on-click listener action
 			AppLauncher.getApp().goBack();
 		});
 		
-		container.getChildren().addAll(arrowHoverView, arrowStaticView);
-		return container;
+		return arrowContainer;
+	}
+	
+	/**
+	 * Get a StackPane containing an animated account icon for account management
+	 * Configured listener for logging in and viewing Yahoo account status
+	 * 
+	 * @param height ImageView height
+	 * @param width ImageView width
+	 * @return StackPane containing ImageView objects
+	 */
+	public static StackPane accountIcon(double height, double width) {
+		ImageView iconStatic = imageResource(ResourcePath.ACCOUNT_ICON, height, width, true);
+		ImageView iconHover = imageResource(ResourcePath.ACCOUNT_ICON_HOVER, height, width, true);
+		
+		StackPane iconContainer = PPAnimation.dualStateImageHover(iconStatic, iconHover, 200);
+		iconContainer.getStyleClass().add("taskbar-account-icon");
+		
+		iconStatic.setOnMouseClicked((e) -> {
+			// TODO implement this
+		});
+		
+		return iconContainer;
+		
 	}
 
 }

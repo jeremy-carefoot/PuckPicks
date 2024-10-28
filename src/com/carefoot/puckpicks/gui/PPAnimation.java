@@ -3,6 +3,8 @@ package com.carefoot.puckpicks.gui;
 import javafx.animation.FadeTransition;
 import javafx.animation.RotateTransition;
 import javafx.scene.Node;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
 
 /*
@@ -54,6 +56,33 @@ public class PPAnimation {
 		transition.setNode(node);
 		transition.setToValue(opacity);
 		return transition;
+	}
+	
+	/**
+	 * Given two image states, gives a hover animation that fades between the two states on hover.
+	 * Returns both image states in a StackPane container.
+	 * Effect is accomplished by stacking the two images, and exposing one on hover 
+	 * @param staticImage Regular (static) appearance of the ImageView node
+	 * @param hoverImage Another ImageView that will be exposed/shown on hover
+	 * @param fadeTimeMillis Duration of the fade animation (ms)
+	 * @return StackPaner container with the images
+	 */
+	public static StackPane dualStateImageHover(ImageView staticImage, ImageView hoverImage, double fadeTimeMillis) {
+		StackPane container = new StackPane();
+		FadeTransition fadeOut = fade(staticImage, fadeTimeMillis, 0);
+		FadeTransition fadeIn = fade(staticImage, fadeTimeMillis, 1);
+		
+		/* on hover, modify opacity of static image to expose hover image*/
+		staticImage.setOnMouseEntered((e) -> {
+			fadeOut.play();
+		});
+		staticImage.setOnMouseExited((e) -> {
+			fadeIn.play();
+		});
+		
+		container.getChildren().addAll(hoverImage, staticImage);
+		return container;
+		
 	}
 
 }

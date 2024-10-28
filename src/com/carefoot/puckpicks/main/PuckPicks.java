@@ -4,6 +4,8 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
+import com.carefoot.puckpicks.data.ResourcePath;
+
 /**
  * Static class with basic utility methods
  * 
@@ -27,8 +29,8 @@ public class PuckPicks {
 	 * @param image_name Name of the image file
 	 * @return Image as InputStream
 	 */
-	public static InputStream getImageResource(String image_name) {
-		return PuckPicks.class.getClassLoader().getResourceAsStream(image_name);
+	public static InputStream getImageResource(ResourcePath resource) {
+		return PuckPicks.class.getClassLoader().getResourceAsStream(resource.path());
 	}
 	
 	/**

@@ -12,6 +12,7 @@ public abstract class PPScene {
 	private static final String DEFAULT_STYLESHEET_PATH = "style/default.css"; 	// path to default CSS stylesheet (app-wide)
 	
 	private Scene scene;
+	private StackPane root; 	// keep instance of root node so children can be concurrently modified
 	private String css;
 	private boolean initialized; 		// whether the scene has been constructed (or initialized)
 	private boolean navigable; 	// whether the scene should be logged for navigation (for use with back arrow)
@@ -25,6 +26,7 @@ public abstract class PPScene {
 	 */
 	public PPScene(String css, boolean navigable, boolean includeTaskbar) {
 		scene = null;
+		root = null;
 		initialized = false;
 		this.css = css;
 		this.navigable = navigable;
@@ -54,6 +56,7 @@ public abstract class PPScene {
 			}
 			
 			this.scene = new Scene(basePane, width, height);
+			this.root = basePane;
 			initialized = true;
 		} else {
 			throw new IllegalArgumentException("Base node cannot be null!");
@@ -64,6 +67,23 @@ public abstract class PPScene {
 		
 		/* Add the global default CSS file */
 		this.scene.getStylesheets().add(PPScene.class.getClassLoader().getResource(DEFAULT_STYLESHEET_PATH).toExternalForm());
+	}
+	
+	/**
+	 * Attaches the application taskbar instance to the top of the scene.
+	 * Note: When the taskbar is attached to a scene, it is silently removed from all other scenes.
+	 * If taskbar is not initialized or scene does not support the taskbar: do nothing
+	 */
+	public void attachTaskbar() {
+		if (AppLauncher.getApp() != null && includeTaskbar()) {
+			PPTaskbar taskbar = AppLauncher.getApp().getTaskbar();
+			
+			/* Update the taskbar to display relevant information*/
+			taskbar.update(this);
+
+			if (!root.getChildren().contains(taskbar.getContainer())) 	// add taskbar if not already in scene
+				root.getChildren().add(taskbar.getContainer());
+		}
 	}
 	
 	/**
