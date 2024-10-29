@@ -1,5 +1,7 @@
 package com.carefoot.puckpicks.main;
 
+import com.carefoot.puckpicks.authentication.TokenManager;
+import com.carefoot.puckpicks.data.FileStorage;
 import com.carefoot.puckpicks.gui.PPApplication;
 import com.carefoot.puckpicks.gui.scenes.Account;
 import com.carefoot.puckpicks.gui.scenes.MainMenu;
@@ -25,6 +27,11 @@ public class AppLauncher extends Application {
 //		debug();
 	}
 	
+	// JavaFX stop method
+	public void stop() {
+		FileStorage.saveFiles(); 	// save all instance-independent data
+	}
+	
 	public static void main(String[] args) {
 		launch(args);
 	}
@@ -40,6 +47,11 @@ public class AppLauncher extends Application {
 	// TODO delete for prod
 	private void debug() {
 		app.setScene(new Account(), false);
+		TokenManager tm = new TokenManager();
+		System.out.println(tm.getAuthToken());
+		System.out.println(tm.getRefreshToken());
+		tm.setAuthToken("test");
+		tm.setRefreshToken("test1");
 	}
 
 }

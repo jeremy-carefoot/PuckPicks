@@ -1,6 +1,6 @@
 package com.carefoot.puckpicks.gui.scenes;
 
-import com.carefoot.puckpicks.data.ResourcePath;
+import com.carefoot.puckpicks.data.FilePath;
 import com.carefoot.puckpicks.gui.PPAnimation;
 import com.carefoot.puckpicks.gui.PPGui;
 import com.carefoot.puckpicks.main.AppLauncher;
@@ -41,7 +41,7 @@ public class MainMenu extends PPScene {
 		VBox root = new VBox();
 		root.setAlignment(Pos.CENTER);
 		
-		ImageView logo = PPGui.imageResource(ResourcePath.APP_LOGO, 125, 250, true);
+		ImageView logo = PPGui.imageResource(FilePath.APP_LOGO, 125, 250, true);
 		Text welcome = PPGui.textWithStyle("Welcome back!", "h2-dark");
 		Text getStarted = PPGui.textWithStyle("Select a tool to get started:", "h2-dark");
 		Region spacer = PPGui.filler(false, 30);

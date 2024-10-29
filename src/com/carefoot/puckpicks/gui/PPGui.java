@@ -2,7 +2,7 @@ package com.carefoot.puckpicks.gui;
 
 import java.io.InputStream;
 
-import com.carefoot.puckpicks.data.ResourcePath;
+import com.carefoot.puckpicks.data.FilePath;
 import com.carefoot.puckpicks.main.AppLauncher;
 import com.carefoot.puckpicks.main.PuckPicks;
 
@@ -104,7 +104,7 @@ public class PPGui {
 	 * @param aspectRatio Whether to preserve image aspect ratio
 	 * @return ImageView object
 	 */
-	public static ImageView imageResource(ResourcePath path, double height, double width, boolean aspectRatio) {
+	public static ImageView imageResource(FilePath path, double height, double width, boolean aspectRatio) {
 		ImageView image = new ImageView(new Image(PuckPicks.getImageResource(path)));
 		image.setFitHeight(height);
 		image.setFitWidth(width);
@@ -120,7 +120,7 @@ public class PPGui {
 	 * @return ImageView object of symbol
 	 */
 	public static ImageView errorSymbol(double height, double width) {
-		ImageView image = imageResource(ResourcePath.ERROR_ICON, height, width, true);
+		ImageView image = imageResource(FilePath.ERROR_ICON, height, width, true);
 		return image;
 	}
 	
@@ -133,8 +133,8 @@ public class PPGui {
 	 * @return StackPane containing ImageView objects
 	 */
 	public static StackPane backArrow(double height, double width) {
-		ImageView arrowStaticView = imageResource(ResourcePath.BACK_ARROW, height, width, true); 	// constructed with static (non hover) image
-		ImageView arrowHoverView = imageResource(ResourcePath.BACK_ARROW_HOVER, height, width, true); 	// Image to dynamically switch ImageView on hover
+		ImageView arrowStaticView = imageResource(FilePath.BACK_ARROW, height, width, true); 	// constructed with static (non hover) image
+		ImageView arrowHoverView = imageResource(FilePath.BACK_ARROW_HOVER, height, width, true); 	// Image to dynamically switch ImageView on hover
 		
 		StackPane arrowContainer = PPAnimation.dualStateImageHover(arrowStaticView, arrowHoverView, 200);
 		arrowContainer.getStyleClass().add("taskbar-back-arrow");
@@ -155,8 +155,8 @@ public class PPGui {
 	 * @return StackPane containing ImageView objects
 	 */
 	public static StackPane accountIcon(double height, double width) {
-		ImageView iconStatic = imageResource(ResourcePath.ACCOUNT_ICON, height, width, true);
-		ImageView iconHover = imageResource(ResourcePath.ACCOUNT_ICON_HOVER, height, width, true);
+		ImageView iconStatic = imageResource(FilePath.ACCOUNT_ICON, height, width, true);
+		ImageView iconHover = imageResource(FilePath.ACCOUNT_ICON_HOVER, height, width, true);
 		
 		StackPane iconContainer = PPAnimation.dualStateImageHover(iconStatic, iconHover, 200);
 		iconContainer.getStyleClass().add("taskbar-account-icon");

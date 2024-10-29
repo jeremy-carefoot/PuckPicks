@@ -11,6 +11,7 @@ import java.util.Map.Entry;
 import org.json.JSONObject;
 
 import com.carefoot.puckpicks.data.requests.PostRequest;
+import com.carefoot.puckpicks.main.Log;
 
 /**
  * Class used to submit HTTP requests for data.
@@ -107,14 +108,14 @@ public class DataManager {
 				output.append(line);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			Log.log("Could not read provided InputStream: " + e.getMessage(), Log.ERROR);
 			return null;
 		} finally {
 			/* Close BufferedReader */
 			try {
 				in.close();
 			} catch (IOException e) {
-				e.printStackTrace();
+				Log.log("Could not close BufferedReader: " + e.getMessage(), Log.ERROR);
 			}
 		}
 		

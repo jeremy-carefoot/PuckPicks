@@ -4,7 +4,7 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
-import com.carefoot.puckpicks.data.ResourcePath;
+import com.carefoot.puckpicks.data.FilePath;
 
 /**
  * Static class with basic utility methods
@@ -29,7 +29,7 @@ public class PuckPicks {
 	 * @param image_name Name of the image file
 	 * @return Image as InputStream
 	 */
-	public static InputStream getImageResource(ResourcePath resource) {
+	public static InputStream getImageResource(FilePath resource) {
 		return PuckPicks.class.getClassLoader().getResourceAsStream(resource.path());
 	}
 	
@@ -46,4 +46,5 @@ public class PuckPicks {
 		}
 		return output.substring(0, output.length()-1); 		// Don't include the final ampersand
 	} 
+	
 }

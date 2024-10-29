@@ -15,6 +15,7 @@ import com.carefoot.puckpicks.data.requests.GoalieRequest;
 import com.carefoot.puckpicks.data.requests.SkaterRequest;
 import com.carefoot.puckpicks.gui.PPAnimation;
 import com.carefoot.puckpicks.gui.PPGui;
+import com.carefoot.puckpicks.main.Log;
 
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -236,9 +237,9 @@ public class Leaderboard extends PPScene {
 			players = dataManager.submitRequest(displayPlayers ? new SkaterRequest(category, limit) : new GoalieRequest(category, limit));
 		} catch (Exception e) {
 			/*
-			 * If there is an error, return the list with an error message and print trace
+			 * If there is an error, return the list with an error message and log
 			 */
-			e.printStackTrace();
+			Log.log("Could not grab player data: " + e.getMessage(), Log.ERROR);
 			list.add(getErrorDisplay());
 			return list;
 		}
@@ -326,7 +327,7 @@ public class Leaderboard extends PPScene {
 			try {
 				headshot = PPGui.image(new URI(player.get("headshot")).toURL().openStream(), 75, 75, true);
 			} catch (Exception e) {
-				e.printStackTrace();
+				Log.log("Could not render player headshot: " + e.getMessage(), Log.ERROR);
 				return;
 			}		
 			

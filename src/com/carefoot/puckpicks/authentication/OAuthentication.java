@@ -11,6 +11,7 @@ import org.json.JSONObject;
 import com.carefoot.puckpicks.data.DataManager;
 import com.carefoot.puckpicks.data.requests.PostRequest;
 import com.carefoot.puckpicks.data.requests.URLRequest;
+import com.carefoot.puckpicks.main.Log;
 import com.carefoot.puckpicks.main.PuckPicks;
 
 /**
@@ -99,8 +100,7 @@ public class OAuthentication {
 				/* send POST request to Yahoo and wait for token in response */
 				return tokenManager.submitPost(assembleTokenRequest(accessCode));
 			} catch (Exception e) {
-				e.printStackTrace();
-				throw new IOException("Could not retrieve token from Yahoo");
+				throw new IOException(e.getMessage());
 			}
 		} else {
 			throw new IOException("Could not fetch token access code from server");
@@ -116,7 +116,7 @@ public class OAuthentication {
 		try {
 			code_response = serverCommunicator.submitRequest(new URLRequest("access-code/" + state));
 		} catch (IOException | URISyntaxException e) {
-			e.printStackTrace();
+			Log.log("Could not get OAuthentication access code from server: " + e.getMessage(), Log.ERROR);
 			return null;
 		} 
 		
