@@ -1,6 +1,6 @@
 package com.carefoot.puckpicks.gui.scenes;
 
-import com.carefoot.puckpicks.data.FilePath;
+import com.carefoot.puckpicks.data.paths.FilePath;
 import com.carefoot.puckpicks.gui.PPAnimation;
 import com.carefoot.puckpicks.gui.PPGui;
 import com.carefoot.puckpicks.main.AppLauncher;

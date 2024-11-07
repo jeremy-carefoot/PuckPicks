@@ -10,8 +10,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.carefoot.puckpicks.data.DataRequest;
+import com.carefoot.puckpicks.data.paths.NHLUrlPath;
+import com.carefoot.puckpicks.main.PuckPicks;
 
-public class SkaterRequest implements DataRequest {
+public class SkaterRequest extends DataRequest {
 	
 	public static final String DEFAULT_CATEGORY = "Points";
 	
@@ -28,30 +30,31 @@ public class SkaterRequest implements DataRequest {
 	 */
 
 	public SkaterRequest() {
+		super(NHLUrlPath.getBaseUrl());
 		subUrl = getSkaterSubUrl(DEFAULT_CATEGORY, DEFAULT_LIMIT);
 	}
 	
 	public SkaterRequest(int limit) {
+		super(NHLUrlPath.getBaseUrl());
 		subUrl = getSkaterSubUrl(DEFAULT_CATEGORY, limit);
 	}
 
 	public SkaterRequest(String category) {
+		super(NHLUrlPath.getBaseUrl());
 		subUrl = getSkaterSubUrl(category, DEFAULT_LIMIT);
 	}
 	
 	public SkaterRequest(String category, int limit) {
+		super(NHLUrlPath.getBaseUrl());
 		subUrl = getSkaterSubUrl(category, limit);
 	}
 
 	// Returns sub-URL query string given a category and limit
 	private String getSkaterSubUrl(String category, int limit) {
-		// categories map used to convert from category display name to url path
-		return "v1/skater-stats-leaders/current?categories=" + CATEGORIES.get(category) + "&limit=" + Integer.toString(limit);
-	}
-
-	@Override
-	public String requestSubUrl() {
-		return subUrl;
+		Map<String, String> params = new HashMap<>();
+		params.put("categories", CATEGORIES.get(category)); 	// CATEGORIES map converts category title to url
+		params.put("limit", Integer.toString(limit));
+		return NHLUrlPath.PLAYER_LEADERS + PuckPicks.paramsToUrl(params);
 	}
 	
 	/**
@@ -90,4 +93,9 @@ public class SkaterRequest implements DataRequest {
 		return elements;
 	}
 
+	@Override
+	public String requestSubUrl() {
+		return subUrl;
+	}
+	
 }

@@ -1,4 +1,4 @@
-package com.carefoot.puckpicks.data;
+package com.carefoot.puckpicks.data.paths;
 
 /**
  * Enum for storing relative filepath to different resource files

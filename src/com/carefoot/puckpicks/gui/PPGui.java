@@ -2,7 +2,7 @@ package com.carefoot.puckpicks.gui;
 
 import java.io.InputStream;
 
-import com.carefoot.puckpicks.data.FilePath;
+import com.carefoot.puckpicks.data.paths.FilePath;
 import com.carefoot.puckpicks.main.AppLauncher;
 import com.carefoot.puckpicks.main.PuckPicks;
 

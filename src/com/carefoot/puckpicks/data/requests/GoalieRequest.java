@@ -8,8 +8,14 @@ import java.util.Map;
 import org.json.JSONObject;
 
 import com.carefoot.puckpicks.data.DataRequest;
+import com.carefoot.puckpicks.data.paths.NHLUrlPath;
+import com.carefoot.puckpicks.main.PuckPicks;
 
-public class GoalieRequest implements DataRequest {
+/**
+ * Request to NHL API to grab Goalie Leaders with provided parameters
+ * @author jeremycarefoot
+ */
+public class GoalieRequest extends DataRequest {
 	
 	public static final String DEFAULT_CATEGORY = "Wins"; 
 
@@ -26,30 +32,31 @@ public class GoalieRequest implements DataRequest {
 	 */
 	
 	public GoalieRequest() {
+		super(NHLUrlPath.getBaseUrl());
 		subUrl = getGoalieSubUrl(DEFAULT_CATEGORY, DEFAULT_LIMIT);
 	}
 
 	public GoalieRequest(int limit) {
+		super(NHLUrlPath.getBaseUrl());
 		subUrl = getGoalieSubUrl(DEFAULT_CATEGORY, limit);
 	}
 
 	public GoalieRequest(String category) {
+		super(NHLUrlPath.getBaseUrl());
 		subUrl = getGoalieSubUrl(category, DEFAULT_LIMIT);
 	}
 
 	public GoalieRequest(String category, int limit) {
+		super(NHLUrlPath.getBaseUrl());
 		subUrl = getGoalieSubUrl(category, limit);
 	}
 
 	// Return sub-url query string given a category and a limit
 	private String getGoalieSubUrl(String category, int limit) {
-		// category map is used to convert category display name to url path
-		return "v1/goalie-stats-leaders/current?categories=" + CATEGORIES.get(category) + "&limit=" + Integer.toString(limit); 
-	}
-
-	@Override
-	public String requestSubUrl() {
-		return subUrl;
+		Map<String, String> params = new HashMap<>();
+		params.put("categories", CATEGORIES.get(category)); 	// CATEGORIES map converts category name to URL path
+		params.put("limit", Integer.toString(limit));
+		return NHLUrlPath.GOALIE_LEADERS.path() + PuckPicks.paramsToUrl(params); 
 	}
 	
 	/**
@@ -81,6 +88,11 @@ public class GoalieRequest implements DataRequest {
 		}
 		
 		return output;
+	}
+	
+	@Override
+	public String requestSubUrl() {
+		return subUrl;
 	}
 
 }

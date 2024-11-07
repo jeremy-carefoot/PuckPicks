@@ -4,7 +4,13 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.security.NoSuchAlgorithmException;
 
+import org.json.JSONObject;
+
 import com.carefoot.puckpicks.authentication.OAuthentication;
+import com.carefoot.puckpicks.authentication.TokenManager;
+import com.carefoot.puckpicks.data.DataManager;
+import com.carefoot.puckpicks.data.paths.PPServerUrlPath;
+import com.carefoot.puckpicks.data.requests.YahooUserInfoRequest;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -17,8 +23,11 @@ import javafx.scene.web.WebView;
 
 public class Account extends PPScene {
 	
+	private TokenManager tm;
+	
 	public Account() {
 		super(null, true, true);
+		tm = new TokenManager();
 	}
 
 	@Override
@@ -30,6 +39,7 @@ public class Account extends PPScene {
 		VBox root = new VBox();
 		root.setAlignment(Pos.CENTER);
 		Button login = new Button("Login");
+		Button userInfo = new Button("Get User Info");
 		OAuthentication auth;
 		try {
 			auth = new OAuthentication();
@@ -47,11 +57,13 @@ public class Account extends PPScene {
 			webEngine.locationProperty().addListener(new ChangeListener<String>() {
 				@Override
 				public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-					if (newValue.contains(OAuthentication.SERVER_DNS)) {
+					if (newValue.contains(PPServerUrlPath.getBaseURL())) {
 						new Thread(() -> {
 							try {
-								Thread.sleep(3000);
-								auth.fetchToken();
+								Thread.sleep(6000);
+								JSONObject response = auth.fetchToken();
+								tm.setAuthToken(response.getString("access_token"));
+								tm.setRefreshToken(response.getString("refresh_token"));
 							} catch (Exception e) {
 								e.printStackTrace();
 							}	
@@ -62,7 +74,17 @@ public class Account extends PPScene {
 
 		});
 		
-		root.getChildren().add(login);
+		userInfo.setOnAction((e) -> {
+			try {
+				System.out.println(DataManager.submitRequest(new YahooUserInfoRequest(tm.getAuthToken())));
+				System.out.println(auth.tempRefreshToken(tm.getRefreshToken()));
+			} catch (Exception e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}		
+		});
+		
+		root.getChildren().addAll(login, userInfo);
 		return root;
 	}
 

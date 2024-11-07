@@ -11,6 +11,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.carefoot.puckpicks.data.paths.FilePath;
 import com.carefoot.puckpicks.main.Log;
 
 /**
@@ -117,13 +118,13 @@ public abstract class FileStorage {
 	 * Write content of this object into a file that will be automatically stored and loaded on app startup/exit
 	 * @return Content to write in a String list form; each list entry is a new line in the file
 	 */
-	public abstract List<String> write();	
+	protected abstract List<String> write();	
 	
 	/**
 	 * Loads data from file on app startup.
 	 * Contents can be null if the file does not exist yet (first startup)
 	 * @param contents Contents of the file in String list format; each list entry represents a new line from file
 	 */
-	public abstract void load(List<String> contents); 	//  method to load file data into subclasses
+	protected abstract void load(List<String> contents); 	
 
 }

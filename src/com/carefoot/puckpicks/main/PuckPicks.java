@@ -1,10 +1,13 @@
 package com.carefoot.puckpicks.main;
 
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashMap;
+import java.io.InputStreamReader;
+import java.util.Map;
 import java.util.Map.Entry;
 
-import com.carefoot.puckpicks.data.FilePath;
+import com.carefoot.puckpicks.data.paths.FilePath;
 
 /**
  * Static class with basic utility methods
@@ -38,7 +41,7 @@ public class PuckPicks {
 	 * @param params HashMap<String, String> of parameters, each in name:value format
 	 * @return URL-appendable String
 	 */
-	public static String paramsToUrl(HashMap<String, String> params) {
+	public static String paramsToUrl(Map<String, String> params) {
 		String output = "?";
 		
 		for (Entry<String, String> param : params.entrySet()) {
@@ -46,5 +49,33 @@ public class PuckPicks {
 		}
 		return output.substring(0, output.length()-1); 		// Don't include the final ampersand
 	} 
+	
+	/**
+	 * Reads an input stream
+	 * @param is InputStream to read
+	 * @return String of read data
+	 */
+	public static String readInputStream(InputStream is) {
+		StringBuilder output  = new StringBuilder();
+		BufferedReader in = new BufferedReader(new InputStreamReader(is));
+		String line;
+		try {
+			while((line = in.readLine()) != null) {
+				output.append(line);
+			}
+		} catch (Exception e) {
+			Log.log("Could not read provided InputStream: " + e.getMessage(), Log.ERROR);
+			return null;
+		} finally {
+			/* Close BufferedReader */
+			try {
+				in.close();
+			} catch (IOException e) {
+				Log.log("Could not close BufferedReader: " + e.getMessage(), Log.ERROR);
+			}
+		}
+		
+		return output.toString();
+	}
 	
 }

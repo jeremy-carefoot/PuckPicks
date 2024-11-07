@@ -1,36 +1,25 @@
 package com.carefoot.puckpicks.data;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.net.*;
+import java.net.HttpURLConnection;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.Map.Entry;
 
 import org.json.JSONObject;
 
-import com.carefoot.puckpicks.data.requests.PostRequest;
-import com.carefoot.puckpicks.main.Log;
+import com.carefoot.puckpicks.data.DataRequest.ConnectionType;
+import com.carefoot.puckpicks.main.PuckPicks;
 
 /**
  * Class used to submit HTTP requests for data.
- * A new instance can be constructed for a base-url, where different DataRequests are appended sub-urls.
  * Retrieved data is in JSON format.
  * 
  * @author jeremycarefoot
  */
 public class DataManager {
-	
-	private String baseUrl;
-	
-	/**
-	 * Default constructor.
-	 * @param baseUrl base-URL used to submit DataRequests
-	 */
-	public DataManager(String baseUrl) {
-		this.baseUrl = baseUrl;
-	}
 	
 	/**
 	 * Submits an HTTP data request.
@@ -39,15 +28,33 @@ public class DataManager {
 	 * @param req DataRequest object containing request information
 	 * @return JSONObject containing data from NHL API
 	 */
-	public JSONObject submitRequest(DataRequest req) throws IOException, URISyntaxException {
+	public static JSONObject submitRequest(DataRequest req) throws IOException, URISyntaxException {
 		JSONObject response = null;	
+		ConnectionType reqType = req.getConnectionType();
 
-		URL url = new URI(baseUrl + req.requestSubUrl()).toURL();
+		URL url = new URI(req.getUrl()).toURL();
 		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-		connection.setRequestMethod("GET");
+		connection.setRequestMethod(reqType.toString());
+		
+		/* setup headers */
+		for (Entry<String, String> header : req.getHeaders().entrySet()) {
+			connection.addRequestProperty(header.getKey(), header.getValue());
+		}
+
+		/* If the request is a POST request, we need to write content to the connection output stream */
+		if (reqType == ConnectionType.POST) {
+			connection.setDoOutput(true);
+			
+			try (OutputStream os = connection.getOutputStream()) {
+				byte[] output = ( (PostRequest) req).body().getBytes("utf-8");
+				os.write(output);
+			} catch (ClassCastException e) {					
+				throw new IOException("Request specified as POST request but is missing content body! (Invalid request class implementation)");
+			}	
+		}
 
 		/* read the HTTP response (plaintext) */
-		String raw_response = readInputStream(connection.getInputStream());
+		String raw_response = PuckPicks.readInputStream(connection.getInputStream());
 
 		if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
 			response  = new JSONObject(raw_response);
@@ -56,70 +63,6 @@ public class DataManager {
 		}
 		
 		return response;
-	}
-	
-	/**
-	 * Submits an HTTP Post request.
-	 * Returns the response
-	 * @param req Valid PostRequest
-	 * @return Response in String format
-	 * @throws URISyntaxException URL could not be parsed
-	 * @throws MalformedURLException Invalid protocol or URL could not be parsed
-	 * @throws IOException An I/O error occurred (could be communication with server)
-	 */
-	public String submitPost(PostRequest req) throws URISyntaxException, MalformedURLException, IOException {
-		URL url = new URI(baseUrl + req.requestSubUrl()).toURL();
-		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-		connection.setRequestMethod("POST");
-		connection.setDoOutput(true);
-
-		/* setup headers */
-		for (Entry<String, String> header : req.getHeaders().entrySet()) {
-			connection.setRequestProperty(header.getKey(), header.getValue());
-		}
-		
-		/* write content */
-		try (OutputStream os = connection.getOutputStream()) {
-			byte[] output  = req.getBody().getBytes("utf-8");
-			os.write(output, 0, output.length);
-		}
-		
-		/* return HTTP response, if applicable */
-		if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-			String response = readInputStream(connection.getInputStream());
-			return response;
-		} else {
-			throw new IOException("Request failed: " + Integer.toString(connection.getResponseCode()));
-		}
-	}
-	
-	/**
-	 * Reads an input stream 
-	 * 
-	 * @param is InputStream to read
-	 * @return String of read data
-	 */
-	private String readInputStream(InputStream is) {
-		StringBuilder output  = new StringBuilder();
-		BufferedReader in = new BufferedReader(new InputStreamReader(is));
-		String line;
-		try {
-			while((line = in.readLine()) != null) {
-				output.append(line);
-			}
-		} catch (Exception e) {
-			Log.log("Could not read provided InputStream: " + e.getMessage(), Log.ERROR);
-			return null;
-		} finally {
-			/* Close BufferedReader */
-			try {
-				in.close();
-			} catch (IOException e) {
-				Log.log("Could not close BufferedReader: " + e.getMessage(), Log.ERROR);
-			}
-		}
-		
-		return output.toString();
 	}
 
 }

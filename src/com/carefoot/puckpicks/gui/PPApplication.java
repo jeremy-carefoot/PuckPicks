@@ -4,7 +4,7 @@ import java.awt.Taskbar;
 import java.awt.Taskbar.Feature;
 import java.awt.Toolkit;
 
-import com.carefoot.puckpicks.data.FilePath;
+import com.carefoot.puckpicks.data.paths.FilePath;
 import com.carefoot.puckpicks.gui.scenes.LoadingScene;
 import com.carefoot.puckpicks.gui.scenes.PPScene;
 import com.carefoot.puckpicks.main.PuckPicks;

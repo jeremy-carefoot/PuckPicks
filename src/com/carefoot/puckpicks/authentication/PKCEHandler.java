@@ -7,7 +7,7 @@ import java.security.SecureRandom;
 import java.util.Base64;
 
 /**
- * Class for handling OAuth 2.0 Proof Key for Code Exchange
+ * Class for handling OAuth 2.0 Proof Key for Code Exchange.
  * PuckPicks is a public client; therefore this is an additional security measure for OAuth
  * 
  * @author jeremycarefoot

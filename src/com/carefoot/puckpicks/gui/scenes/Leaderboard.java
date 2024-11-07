@@ -51,8 +51,6 @@ public class Leaderboard extends PPScene {
 			"100",
 			"500"
 	};
-	
-	private final DataManager dataManager; 		// DataManager instance for getting skater data
 
 	private boolean displayPlayers;
 	private AsyncTaskQueue imageRenderer = null; 		// instance of an AsyncTaskQueue used for rendering images in the list
@@ -65,7 +63,6 @@ public class Leaderboard extends PPScene {
 	 */
 	public Leaderboard() {
 		super("leaderboards.css", true, true);
-		this.dataManager = new DataManager("https://api-web.nhle.com/");
 		displayPlayers = true;
 	}
 	
@@ -75,7 +72,6 @@ public class Leaderboard extends PPScene {
 	 */
 	public Leaderboard(boolean displayPlayers) {
 		super("leaderboards.css", true, true);
-		this.dataManager = new DataManager("https://api-web.nhle.com/");
 		this.displayPlayers = displayPlayers;
 	}
 	
@@ -234,7 +230,7 @@ public class Leaderboard extends PPScene {
 		List<HBox> list = new ArrayList<>();
 		JSONObject players;
 		try {// attempt to grab data
-			players = dataManager.submitRequest(displayPlayers ? new SkaterRequest(category, limit) : new GoalieRequest(category, limit));
+			players = DataManager.submitRequest(displayPlayers ? new SkaterRequest(category, limit) : new GoalieRequest(category, limit));
 		} catch (Exception e) {
 			/*
 			 * If there is an error, return the list with an error message and log

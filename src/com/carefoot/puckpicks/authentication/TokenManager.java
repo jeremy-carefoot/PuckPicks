@@ -20,7 +20,7 @@ public class TokenManager extends FileStorage {
 	}
 
 	@Override
-	public List<String> write() {
+	protected List<String> write() {
 		List<String> content = new ArrayList<>();
 		content.add(authToken);
 		content.add(refreshToken);
@@ -28,7 +28,7 @@ public class TokenManager extends FileStorage {
 	}
 
 	@Override
-	public void load(List<String> content) {
+	protected void load(List<String> content) {
 		/* Load authToken from index 0 and refreshToken from index 1 if file content is present */
 		if (content != null) {
 			switch(content.size()) {
