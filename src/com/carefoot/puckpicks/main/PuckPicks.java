@@ -33,7 +33,7 @@ public class PuckPicks {
 	 * @return Image as InputStream
 	 */
 	public static InputStream getImageResource(FilePath resource) {
-		return PuckPicks.class.getClassLoader().getResourceAsStream(resource.path());
+		return PuckPicks.class.getClassLoader().getResourceAsStream(resource.toString());
 	}
 	
 	/**

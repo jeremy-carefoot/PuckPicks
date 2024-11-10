@@ -22,7 +22,7 @@ import com.carefoot.puckpicks.main.Log;
 public abstract class FileStorage {
 	
 	private static List<FileStorage> files = new ArrayList<>();
-	private static Path dataDir = Paths.get(FilePath.DATA_DIRECTORY.path()); 		// directory to store all file data
+	private static Path dataDir = Paths.get(FilePath.DATA_DIRECTORY.toString()); 		// directory to store all file data
 	
 	private String fileName;
 	

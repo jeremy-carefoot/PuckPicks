@@ -23,7 +23,7 @@ public class PPAccessCodeRequest extends DataRequest {
 
 	@Override
 	public String requestSubUrl() {
-		return PPServerUrlPath.FETCH_ACCESS_TOKEN.path() + "/" + stateId;
+		return PPServerUrlPath.FETCH_ACCESS_TOKEN + "/" + stateId;
 	}
 
 }

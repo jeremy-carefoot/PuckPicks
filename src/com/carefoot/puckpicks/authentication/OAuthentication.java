@@ -1,6 +1,7 @@
 package com.carefoot.puckpicks.authentication;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
@@ -9,10 +10,9 @@ import java.util.UUID;
 import org.json.JSONObject;
 
 import com.carefoot.puckpicks.data.DataManager;
+import com.carefoot.puckpicks.data.exceptions.PPServerException;
 import com.carefoot.puckpicks.data.paths.PPServerUrlPath;
 import com.carefoot.puckpicks.data.requests.PPAccessCodeRequest;
-import com.carefoot.puckpicks.data.requests.URLRequest;
-import com.carefoot.puckpicks.data.requests.YahooOAuthRefreshRequest;
 import com.carefoot.puckpicks.data.requests.YahooOAuthTokenRequest;
 import com.carefoot.puckpicks.main.Log;
 import com.carefoot.puckpicks.main.PuckPicks;
@@ -35,6 +35,7 @@ public class OAuthentication {
 	private String codeVerifier; 		// Code verifier for Yahoo PKCE
 	private String codeChallenge; 	// Code challenge for Yahoo PKCE
 	private String state; 		// Unique code for this OAuth request
+	private AuthenticationHandler authHandler; 		// instance of AuthenticationHandler for updating tokens
 	
 	/**
 	 * Initialize a new OAuthentication.
@@ -43,22 +44,23 @@ public class OAuthentication {
 	 * @throws URISyntaxException
 	 * @throws NoSuchAlgorithmException 
 	 */
-	public OAuthentication() throws IOException, URISyntaxException, NoSuchAlgorithmException {
+	public OAuthentication(AuthenticationHandler authHandler) throws PPServerException, NoSuchAlgorithmException {
 		/* retrieve oauth information from server */
-		JSONObject oauthInfo = DataManager.submitRequest(new URLRequest(PPServerUrlPath.getBaseURL(), PPServerUrlPath.OAUTH_INFO.path()));
+		this.authHandler = authHandler;
+		JSONObject oauthInfo = authHandler.getOAuthInfo();
 		
-		if (oauthInfo != null) {// communication successful
-			clientID = oauthInfo.getString("client_id");
-			authUrl = oauthInfo.getString("auth_base_url");
-			tokenEndpoint = oauthInfo.getString("token_endpoint");
-			state = UUID.randomUUID().toString();
+		clientID = oauthInfo.getString("client_id");
+		authUrl = oauthInfo.getString("auth_base_url");
+		tokenEndpoint = oauthInfo.getString("token_endpoint");
+		state = UUID.randomUUID().toString();
 			
-			/* Generate PKCE Information*/
+		/* Generate PKCE Information*/
+		try {
 			codeVerifier = PKCEHandler.generateSecureCode(43); 		// 43 character minimum for code verifier
 			codeChallenge = PKCEHandler.generateCodeChallenge(codeVerifier);
-		} else { 
-			throw new IOException("Could not establish communication with PuckPicks server"); 
-		}
+		} catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
+			Log.log(e.getMessage(), Log.ERROR); 	// internal error
+		} 	
 	}
 	
 	/**
@@ -86,20 +88,19 @@ public class OAuthentication {
 	 * If access code is expired, token cannot be accessed from Yahoo API and method will throw error. </p>
 	 * @return JSON response of the Yahoo server (including token) in String format
 	 */
-	public JSONObject fetchToken() throws IOException {
+	public void completeAuthentication() throws PPServerException, IOException {
 		/* grab access code from PuckPicks server (key for token) */
 		String accessCode = fetchAccessCode();
 		
-		if (accessCode != null) {
-			try {
-				/* send POST request to Yahoo and wait for token in response */
-				JSONObject response = DataManager.submitRequest(new YahooOAuthTokenRequest(tokenEndpoint, accessCode, clientID, codeVerifier));
-				return response;
-			} catch (Exception e) {
-				throw new IOException(e.getMessage());
-			}
-		} else {
-			throw new IOException("Could not fetch token access code from server");
+		try {
+			/* send POST request to Yahoo and wait for token in response */
+			JSONObject response = DataManager.submitRequest(new YahooOAuthTokenRequest(tokenEndpoint, accessCode, clientID, codeVerifier));
+
+			/* update authentication tokens */
+			authHandler.updateAuthToken(response.getString("access_token"));
+			authHandler.updateRefreshToken(response.getString("refresh_token"));
+		} catch (Exception e) {
+			throw new IOException(e.getMessage());
 		}
 	}
 	
@@ -107,20 +108,17 @@ public class OAuthentication {
 	 * Try to fetch the OAuth access code from the PuckPicks server
 	 * @return Code as string, or null if the code could not be accessed.
 	 */
-	private String fetchAccessCode() {
+	private String fetchAccessCode() throws PPServerException {
 		JSONObject code_response;
 		try {
 			code_response = DataManager.submitRequest(new PPAccessCodeRequest(state));
-		} catch (IOException | URISyntaxException e) {
-			Log.log("Could not get OAuthentication access code from server: " + e.getMessage(), Log.ERROR);
+		} catch (URISyntaxException e) {
+			Log.log(e.getMessage(), Log.ERROR); 	// internal error
 			return null;
-		} 
+		} catch (IOException e) {
+			throw new PPServerException(e.getMessage());
+		}
 		
 		return code_response.getString("access_code");
-	}
-	
-	public JSONObject tempRefreshToken(String refreshToken) throws Exception {
-		JSONObject response = DataManager.submitRequest(new YahooOAuthRefreshRequest(tokenEndpoint, clientID, refreshToken));
-		return response;
 	}
 }

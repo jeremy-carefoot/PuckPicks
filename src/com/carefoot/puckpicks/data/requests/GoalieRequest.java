@@ -56,7 +56,7 @@ public class GoalieRequest extends DataRequest {
 		Map<String, String> params = new HashMap<>();
 		params.put("categories", CATEGORIES.get(category)); 	// CATEGORIES map converts category name to URL path
 		params.put("limit", Integer.toString(limit));
-		return NHLUrlPath.GOALIE_LEADERS.path() + PuckPicks.paramsToUrl(params); 
+		return NHLUrlPath.GOALIE_LEADERS + PuckPicks.paramsToUrl(params); 
 	}
 	
 	/**

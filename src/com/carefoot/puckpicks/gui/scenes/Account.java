@@ -1,16 +1,8 @@
 package com.carefoot.puckpicks.gui.scenes;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.security.NoSuchAlgorithmException;
-
-import org.json.JSONObject;
-
+import com.carefoot.puckpicks.authentication.AuthenticationHandler;
 import com.carefoot.puckpicks.authentication.OAuthentication;
-import com.carefoot.puckpicks.authentication.TokenManager;
-import com.carefoot.puckpicks.data.DataManager;
 import com.carefoot.puckpicks.data.paths.PPServerUrlPath;
-import com.carefoot.puckpicks.data.requests.YahooUserInfoRequest;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -23,11 +15,11 @@ import javafx.scene.web.WebView;
 
 public class Account extends PPScene {
 	
-	private TokenManager tm;
+	private AuthenticationHandler authHandler;
 	
 	public Account() {
 		super(null, true, true);
-		tm = new TokenManager();
+		authHandler = new AuthenticationHandler();
 	}
 
 	@Override
@@ -42,9 +34,8 @@ public class Account extends PPScene {
 		Button userInfo = new Button("Get User Info");
 		OAuthentication auth;
 		try {
-			auth = new OAuthentication();
-		} catch (NoSuchAlgorithmException | IOException | URISyntaxException e) {
-			// TODO Auto-generated catch block
+			auth = new OAuthentication(authHandler);
+		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
 		}
@@ -61,9 +52,7 @@ public class Account extends PPScene {
 						new Thread(() -> {
 							try {
 								Thread.sleep(6000);
-								JSONObject response = auth.fetchToken();
-								tm.setAuthToken(response.getString("access_token"));
-								tm.setRefreshToken(response.getString("refresh_token"));
+								auth.completeAuthentication();
 							} catch (Exception e) {
 								e.printStackTrace();
 							}	
@@ -76,8 +65,7 @@ public class Account extends PPScene {
 		
 		userInfo.setOnAction((e) -> {
 			try {
-				System.out.println(DataManager.submitRequest(new YahooUserInfoRequest(tm.getAuthToken())));
-				System.out.println(auth.tempRefreshToken(tm.getRefreshToken()));
+				System.out.println(authHandler.isLoggedIn());
 			} catch (Exception e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();

@@ -16,12 +16,12 @@ public class YahooUserInfoRequest extends DataRequest {
 	public YahooUserInfoRequest(String authToken) {
 		super(YahooUrlPath.getBaseURL());
 		addHeader("Authorization", "Bearer " + authToken); 		// add authentication header
-		addHeader("Host", YahooUrlPath.HOST_DOMAIN.path());
+		addHeader("Host", YahooUrlPath.HOST_DOMAIN.toString());
 	}
 
 	@Override
 	public String requestSubUrl() {	
-		return YahooUrlPath.USER_INFO.path();
+		return YahooUrlPath.USER_INFO.toString();
 	}
 
 }

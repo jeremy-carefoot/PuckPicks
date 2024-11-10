@@ -58,7 +58,7 @@ public class PPApplication {
 		if (Taskbar.isTaskbarSupported()) {// configure macOS and Linux taskbar (if applicable)
 			Taskbar bar = Taskbar.getTaskbar();
 			if (bar.isSupported(Feature.ICON_IMAGE))
-				bar.setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getClassLoader().getResource(FilePath.APP_ICON.path())));
+				bar.setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getClassLoader().getResource(FilePath.APP_ICON.toString())));
 		}
 	}
 	

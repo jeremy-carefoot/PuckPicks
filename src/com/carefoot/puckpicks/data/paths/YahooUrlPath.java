@@ -16,7 +16,7 @@ public enum YahooUrlPath {
 		this.path = path;
 	}
 	
-	public String path() {
+	public String toString() {
 		return path;
 	}
 	

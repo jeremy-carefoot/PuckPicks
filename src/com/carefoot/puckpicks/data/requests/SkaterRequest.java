@@ -54,7 +54,7 @@ public class SkaterRequest extends DataRequest {
 		Map<String, String> params = new HashMap<>();
 		params.put("categories", CATEGORIES.get(category)); 	// CATEGORIES map converts category title to url
 		params.put("limit", Integer.toString(limit));
-		return NHLUrlPath.PLAYER_LEADERS.path() + PuckPicks.paramsToUrl(params);
+		return NHLUrlPath.PLAYER_LEADERS + PuckPicks.paramsToUrl(params);
 	}
 	
 	/**
