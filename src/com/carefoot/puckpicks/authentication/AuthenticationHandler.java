@@ -25,17 +25,17 @@ public class AuthenticationHandler {
 	/**
 	 * Checks if the current auth or refresh token are valid.
 	 * If both don't work, then the user will have to relogin the Yahoo portal.
-	 * @return UserID on success; null on failure
+	 * @return PPUser object on success; null on failure
 	 */
-	public String isLoggedIn() throws PPServerException {
+	public PPUser isLoggedIn() throws PPServerException {
 		String authToken = tokens.getAuthToken();
 		String refreshToken = tokens.getRefreshToken();
 	
 		/* If there is a stored authToken, we will try it */
 		if (authToken != null) {			
-			String userId = getYahooUserID(authToken);
-			if (userId != null) 	// if successful, return userId
-				return userId;
+			PPUser user = getYahooUserInfo(authToken);
+			if (user != null) 	// if successful, return userId
+				return user;
 		}
 		
 		/* Now the auth token did not work; if there is a stored refreshToken, we will try it */
@@ -51,7 +51,7 @@ public class AuthenticationHandler {
 				tokens.setAuthToken(response.getString("access_token"));
 				tokens.setRefreshToken(response.getString("refresh_token"));
 				
-				return getYahooUserID(tokens.getAuthToken());
+				return getYahooUserInfo(tokens.getAuthToken());
 				
 			} catch (IOException | JSONException e) {
 				Log.log("Could not renew access token for refresh token; revalidation may be required", Log.INFO);
@@ -98,11 +98,11 @@ public class AuthenticationHandler {
 	 * @param authToken user's auth token
 	 * @return UserID if successful; otherwise null
 	 */
-	private String getYahooUserID(String authToken) {		
+	private PPUser getYahooUserInfo(String authToken) {		
 		try {
 			
 			JSONObject response = DataManager.submitRequest(new YahooUserInfoRequest(authToken));
-			return response.getString("sub"); 		// sub is the unique user ID
+			return new PPUser(response.getString("sub"), response.getString("email")); 		// sub is the unique user ID
 			
 		} catch (IOException | JSONException e) {
 			Log.log("Could not grab user info with access token; please attempt refresh token", Log.INFO);

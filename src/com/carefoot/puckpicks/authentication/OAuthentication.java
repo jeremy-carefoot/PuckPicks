@@ -77,6 +77,7 @@ public class OAuthentication {
 		urlParams.put("response_type", "code");
 		urlParams.put("code_challenge", codeChallenge);
 		urlParams.put("code_challenge_method", PKCEHandler.CHALLENGE_METHOD);
+		urlParams.put("scope", "openid"); 
 		urlParams.put("state", state);
 		
 		return authUrl + PuckPicks.paramsToUrl(urlParams);
