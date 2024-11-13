@@ -14,6 +14,10 @@ import com.carefoot.puckpicks.data.requests.YahooOAuthRefreshRequest;
 import com.carefoot.puckpicks.data.requests.YahooUserInfoRequest;
 import com.carefoot.puckpicks.main.Log;
 
+/**
+ * Handles Yahoo user authentication and manages tokens used for authentication
+ * @author jeremycarefoot
+ */
 public class AuthenticationHandler {
 	
 	private TokenManager tokens;

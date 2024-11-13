@@ -7,6 +7,7 @@ import com.carefoot.puckpicks.authentication.AuthenticationHandler;
 import com.carefoot.puckpicks.authentication.OAuthentication;
 import com.carefoot.puckpicks.authentication.PPUser;
 import com.carefoot.puckpicks.data.exceptions.PPServerException;
+import com.carefoot.puckpicks.data.exceptions.TokenNotFoundException;
 import com.carefoot.puckpicks.data.paths.FilePath;
 import com.carefoot.puckpicks.gui.PPAnimation;
 import com.carefoot.puckpicks.gui.PPGui;
@@ -119,7 +120,7 @@ public class AccountMenu {
 		errorText.setTextAlignment(TextAlignment.CENTER);
 		
 		Platform.runLater(() -> {// modify container on javafx thread
-			popNode(1); 	// remove load spinnr
+			clearMenuContents();
 			contents.getChildren().addAll(errorSymbol, PPGui.filler(false, 15d), errorText);
 		});
 	}
@@ -139,15 +140,12 @@ public class AccountMenu {
 		signOut.setId("sign-out-button");
 		PPAnimation.animateHover(signOut, 100);
 		signOut.setOnMouseClicked((e) -> {
-			authHandler.signOut();
-			popNode(5); 		// reset menu contents
-			contents.getChildren().add(LoadingScene.buildLoadingSpinner()); 		// enable loading spinner
-			loadLoginButton("Signed out successfully");
+			signOut();
 		});
 		
 		
 		Platform.runLater(() -> {
-			popNode(1); 	// remove load spinner
+			clearMenuContents();
 			contents.getChildren().addAll(title, userEmail, userId, PPGui.filler(false, 15), signOut);
 		});
 	}
@@ -165,32 +163,29 @@ public class AccountMenu {
 		});
 	
 		Platform.runLater(() -> {
-			popNode(1); 	// remove load spinner
+			clearMenuContents();
 			contents.getChildren().addAll(title, PPGui.filler(false, 15d), button);
 		});
 	}
-	
+
 	/**
 	 * Begin a new login process (log a user into their Yahoo account).
 	 * Should only be started by a click on Yahoo login button.
 	 */
 	private void newLogin() {
-		OAuthentication oauth;
-		try {
+		enableLoading();
+		new Thread(() -> {
+			try {
 
-			oauth = new OAuthentication(authHandler);
+				OAuthentication oauth = new OAuthentication(authHandler);
+				Platform.runLater(() -> openLoginWindow(oauth));
 
-		} catch (PPServerException e) {
-			popNode(2); 	// remove login button
-			loadErrorMessage("Error communicating with PuckPicks server\n(servers may be undergoing maintenance)");
-			return;
-		} catch (NoSuchAlgorithmException e) {
-			popNode(2); 	// remove login button
-			loadErrorMessage("Internal error: " + e.getMessage());
-			return;
-		}
-		
-		openLoginWindow(oauth);
+			} catch (PPServerException e) {
+				loadErrorMessage("Error communicating with PuckPicks server\n(servers may be undergoing maintenance)");
+			} catch (NoSuchAlgorithmException e) {
+				loadErrorMessage("Internal error: " + e.getMessage());
+			}		
+		}).start();
 	}
 	
 	/**
@@ -227,25 +222,44 @@ public class AccountMenu {
 	 * @param auth OAuthentication request
 	 */
 	private void completeLogin(OAuthentication auth) {
-		popNode(2); 		// reset menu
 		try {
 			auth.completeAuthentication();
 			loadUserInfo(authHandler.isLoggedIn(), "Login Successful");
+		} catch (TokenNotFoundException e) {
+			loadErrorMessage("Could not complete login\n(Do not close the window until login is complete)");
 		} catch (PPServerException | IOException e) {
 			loadErrorMessage("Login failure: " + e.getMessage());
-		}		
+		}	
 	}
 	
 	/**
-	 * Pop the last node out of the account side menu container (convienience method)
-	 * @param count How many times to pop (can remove multiple elements)
+	 * Sign a user out of their Yahoo account.
+	 * Should be called when the "Sign Out" button is clicked
 	 */
-	private void popNode(int count) {
-		contents.getChildren().remove(contents.getChildren().size()-1);
-		count--;
-
-		if (count > 0)
-			popNode(count);
+	private void signOut() {		
+		enableLoading();
+		authHandler.signOut();
+		loadLoginButton("Signed out successfully");
+	}
+	
+	/**
+	 * Clears all contents/nodes out of the side menu,
+	 * <b>EXCEPT</b> for the top menubar node
+	 */
+	private void clearMenuContents() {
+		int size = contents.getChildren().size();
+		for (int i = size-1; i > 0; i--) {
+			contents.getChildren().remove(i);
+		}
+	}
+	
+	/**
+	 * Enables the loading spinner inside of the side menu.
+	 * Does not change until contents are updated
+	 */
+	private void enableLoading() {
+		clearMenuContents();
+		contents.getChildren().add(LoadingScene.buildLoadingSpinner());
 	}
 	
 	/**

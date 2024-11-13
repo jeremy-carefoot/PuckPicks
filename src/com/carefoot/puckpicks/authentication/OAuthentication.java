@@ -1,5 +1,6 @@
 package com.carefoot.puckpicks.authentication;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
@@ -11,6 +12,7 @@ import org.json.JSONObject;
 
 import com.carefoot.puckpicks.data.DataManager;
 import com.carefoot.puckpicks.data.exceptions.PPServerException;
+import com.carefoot.puckpicks.data.exceptions.TokenNotFoundException;
 import com.carefoot.puckpicks.data.paths.PPServerUrlPath;
 import com.carefoot.puckpicks.data.requests.PPAccessCodeRequest;
 import com.carefoot.puckpicks.data.requests.YahooOAuthTokenRequest;
@@ -88,7 +90,7 @@ public class OAuthentication {
 	 * If access code is expired, token cannot be accessed from Yahoo API and method will throw error. </p>
 	 * @return JSON response of the Yahoo server (including token) in String format
 	 */
-	public void completeAuthentication() throws PPServerException, IOException {
+	public void completeAuthentication() throws PPServerException, TokenNotFoundException, IOException {
 		/* grab access code from PuckPicks server (key for token) */
 		String accessCode = fetchAccessCode();
 		
@@ -108,13 +110,15 @@ public class OAuthentication {
 	 * Try to fetch the OAuth access code from the PuckPicks server
 	 * @return Code as string, or null if the code could not be accessed.
 	 */
-	private String fetchAccessCode() throws PPServerException {
+	private String fetchAccessCode() throws PPServerException, TokenNotFoundException {
 		JSONObject code_response;
 		try {
 			code_response = DataManager.submitRequest(new PPAccessCodeRequest(state));
 		} catch (URISyntaxException e) {
 			Log.log(e.getMessage(), Log.ERROR); 	// internal error
 			return null;
+		} catch (FileNotFoundException e) {
+			throw new TokenNotFoundException();
 		} catch (IOException e) {
 			throw new PPServerException(e.getMessage());
 		}
