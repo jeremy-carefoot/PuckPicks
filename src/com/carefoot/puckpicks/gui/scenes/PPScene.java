@@ -1,15 +1,15 @@
 package com.carefoot.puckpicks.gui.scenes;
 
-import com.carefoot.puckpicks.gui.PPTaskbar;
+import com.carefoot.puckpicks.data.paths.FilePath;
+import com.carefoot.puckpicks.gui.components.PPTaskbar;
 import com.carefoot.puckpicks.main.AppLauncher;
+import com.carefoot.puckpicks.main.PuckPicks;
 
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;
 
 public abstract class PPScene {
-	
-	private static final String DEFAULT_STYLESHEET_PATH = "style/default.css"; 	// path to default CSS stylesheet (app-wide)
 	
 	private Scene scene;
 	private StackPane root; 	// keep instance of root node so children can be concurrently modified
@@ -45,7 +45,6 @@ public abstract class PPScene {
 			StackPane basePane = new StackPane();
 			basePane.getChildren().add(node);
 
-			// TODO debug and fix taskbar
 			if (AppLauncher.getApp() != null && includeTaskbar()) {// if application is initialized and taskbar should be shown
 				PPTaskbar taskbar = AppLauncher.getApp().getTaskbar();
 
@@ -66,7 +65,7 @@ public abstract class PPScene {
 			this.scene.getStylesheets().add(PPScene.class.getClassLoader().getResource("style/" + css).toExternalForm());
 		
 		/* Add the global default CSS file */
-		this.scene.getStylesheets().add(PPScene.class.getClassLoader().getResource(DEFAULT_STYLESHEET_PATH).toExternalForm());
+		this.scene.getStylesheets().add(PuckPicks.getFilePath(FilePath.DEFAULT_STYLESHEET));
 	}
 	
 	/**
@@ -84,6 +83,21 @@ public abstract class PPScene {
 			if (!root.getChildren().contains(taskbar.getContainer())) 	// add taskbar if not already in scene
 				root.getChildren().add(taskbar.getContainer());
 		}
+	}
+	
+	/**
+	 * Adds a node to the top of this scene's StackPane
+	 * @param node Node to add
+	 */
+	public void addNode(Node node) {
+		root.getChildren().add(node);
+	}
+	
+	/**
+	 * Pops the top children node off of this scene's GUI stack (handy for removing menus etc.)
+	 */
+	public void popNode() {
+		root.getChildren().remove(root.getChildren().size()-1);
 	}
 	
 	/**

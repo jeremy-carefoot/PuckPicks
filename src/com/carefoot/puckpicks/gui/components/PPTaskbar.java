@@ -1,5 +1,6 @@
-package com.carefoot.puckpicks.gui;
+package com.carefoot.puckpicks.gui.components;
 
+import com.carefoot.puckpicks.gui.PPGui;
 import com.carefoot.puckpicks.gui.scenes.PPScene;
 import com.carefoot.puckpicks.main.AppLauncher;
 
@@ -21,7 +22,7 @@ public class PPTaskbar {
 	
 	public PPTaskbar() {
 		taskbarContainer = buildContainer();
-		backArrow = PPGui.backArrow(50, 50);
+		backArrow = PPGui.backArrow(50, 50);	
 		account = PPGui.accountIcon(35, 35);
 		buildTaskbar();
 	}
@@ -30,6 +31,18 @@ public class PPTaskbar {
 	 * Complete the taskbar construction (should be called after other elements are built)
 	 */
 	private void buildTaskbar() {	
+		/* configure account icon listener */
+		account.getChildren().get(1).setOnMouseClicked((e) -> {
+			AccountMenu menu = new AccountMenu(AppLauncher.getApp().getAuthHandler());
+			AppLauncher.getApp().addNodeToScene(menu.getNode());
+			menu.showMenu();
+		});
+
+		/* configure the back arrow listener*/
+		backArrow.getChildren().get(1).setOnMouseClicked((e) -> {
+			AppLauncher.getApp().goBack();
+		});
+
 		taskbarContainer.getChildren().addAll(backArrow, PPGui.filler(true), account);
 	}
 	

@@ -59,7 +59,7 @@ public class DataManager {
 		if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
 			response  = new JSONObject(raw_response);
 		} else {
-			throw new IOException(raw_response);
+			throw new IOException(connection.getResponseMessage()); 		// TODO add a custom exception for better handling here
 		}
 		
 		return response;

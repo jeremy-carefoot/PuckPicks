@@ -3,7 +3,6 @@ package com.carefoot.puckpicks.gui;
 import java.io.InputStream;
 
 import com.carefoot.puckpicks.data.paths.FilePath;
-import com.carefoot.puckpicks.main.AppLauncher;
 import com.carefoot.puckpicks.main.PuckPicks;
 
 import javafx.scene.image.Image;
@@ -126,7 +125,7 @@ public class PPGui {
 	
 	/**
 	 * Get a StackPane containing an animated back arrow for navigation in the application.
-	 * Configured listener for taking back to previous state of the application on-click.
+	 * No configured listener; must be added to node at index <b>1</b>
 	 * 
 	 * @param height ImageView height
 	 * @param width ImageView width
@@ -139,16 +138,12 @@ public class PPGui {
 		StackPane arrowContainer = PPAnimation.dualStateImageHover(arrowStaticView, arrowHoverView, 200);
 		arrowContainer.getStyleClass().add("taskbar-back-arrow");
 		
-		arrowStaticView.setOnMouseClicked((e) -> {// on-click listener action
-			AppLauncher.getApp().goBack();
-		});
-		
 		return arrowContainer;
 	}
 	
 	/**
-	 * Get a StackPane containing an animated account icon for account management
-	 * Configured listener for logging in and viewing Yahoo account status
+	 * Get a StackPane containing an animated account icon for account management.
+	 * No configured listener; must be added to node at index <b>1</b>
 	 * 
 	 * @param height ImageView height
 	 * @param width ImageView width
@@ -161,12 +156,25 @@ public class PPGui {
 		StackPane iconContainer = PPAnimation.dualStateImageHover(iconStatic, iconHover, 200);
 		iconContainer.getStyleClass().add("taskbar-account-icon");
 		
-		iconStatic.setOnMouseClicked((e) -> {
-			// TODO implement this
-		});
+		return iconContainer;	
+	}
+
+	/**
+	 * Get a StackPane containing an animated cancel icon.
+	 * No configured listener; must be added to node at index <b>1</b>
+	 * 
+	 * @param height ImageView height
+	 * @param width ImageView width
+	 * @return StackPane containing ImageView objects
+	 */
+	public static StackPane cancelIcon(double height, double width) {
+		ImageView iconStatic = imageResource(FilePath.CANCEL_ICON, height, width, true);
+		ImageView iconHover = imageResource(FilePath.CANCEL_ICON_HOVER, height, width, true);
 		
-		return iconContainer;
+		StackPane iconContainer = PPAnimation.dualStateImageHover(iconStatic, iconHover, 200);
+		iconContainer.getStyleClass().add("cancel-icon");
 		
+		return iconContainer;	
 	}
 
 }

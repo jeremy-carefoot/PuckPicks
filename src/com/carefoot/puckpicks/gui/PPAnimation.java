@@ -2,6 +2,7 @@ package com.carefoot.puckpicks.gui;
 
 import javafx.animation.FadeTransition;
 import javafx.animation.RotateTransition;
+import javafx.animation.TranslateTransition;
 import javafx.scene.Node;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
@@ -83,6 +84,19 @@ public class PPAnimation {
 		container.getChildren().addAll(hoverImage, staticImage);
 		return container;
 		
+	}
+	
+	/**
+	 * Create a horizontal translation animation that moves the provided node
+	 * @param node Node to move
+	 * @param durationMillis Animation duration
+	 * @param newX new X position of the node
+	 * @return TranslateTransition object
+	 */
+	public static TranslateTransition horizontalTranslation(Node node, double durationMillis, double newX) {
+		TranslateTransition transition = new TranslateTransition(Duration.millis(durationMillis), node);
+		transition.setToX(newX);
+		return transition;
 	}
 
 }

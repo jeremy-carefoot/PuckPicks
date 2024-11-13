@@ -14,6 +14,10 @@ public enum FilePath {
 	BACK_ARROW_HOVER("back_arrow_hover.png"),
 	ACCOUNT_ICON("account_icon.png"),
 	ACCOUNT_ICON_HOVER("account_icon_hover.png"),
+	CANCEL_ICON("cancel_icon.png"),
+	CANCEL_ICON_HOVER("cancel_icon_hover.png"),
+	YAHOO_LOGIN_BUTTON("yahoo_signin_button.png"),
+	DEFAULT_STYLESHEET("style/default.css"),
 	DATA_DIRECTORY(System.getProperty("user.home") + "/.puckpicks");
 	
 	private String path;

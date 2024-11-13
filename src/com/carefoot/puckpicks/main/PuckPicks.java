@@ -37,6 +37,15 @@ public class PuckPicks {
 	}
 	
 	/**
+	 * Grab the absolute filepath to an application resource
+	 * @param resource FilePath enum value
+	 * @return Absolute filepath 
+	 */
+	public static String getFilePath(FilePath resource) {
+		return PuckPicks.class.getClassLoader().getResource(resource.toString()).toExternalForm();
+	}
+	
+	/**
 	 * Takes a collection of URL parameters in a HashMap format, and translates them into a URL-appendable String (with ?)
 	 * @param params HashMap<String, String> of parameters, each in name:value format
 	 * @return URL-appendable String

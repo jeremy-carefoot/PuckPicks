@@ -26,6 +26,7 @@ public class AuthenticationHandler {
 	 * Checks if the current auth or refresh token are valid.
 	 * If both don't work, then the user will have to relogin the Yahoo portal.
 	 * @return PPUser object on success; null on failure
+	 * @throws PPServerException Can't communicate with PuckPicks server (for refresh token exchange)
 	 */
 	public PPUser isLoggedIn() throws PPServerException {
 		String authToken = tokens.getAuthToken();
@@ -94,6 +95,15 @@ public class AuthenticationHandler {
 	}
 	
 	/**
+	 * Sign a user out of their Yahoo account (delete authentication information)
+	 */
+	public void signOut() {
+		tokens.setAuthToken(null);
+		tokens.setRefreshToken(null);
+		tokens.updateFile(tokens.write());
+	}
+	
+	/**
 	 * Send a request for a users Yahoo ID using provided auth token
 	 * @param authToken user's auth token
 	 * @return UserID if successful; otherwise null
@@ -105,7 +115,7 @@ public class AuthenticationHandler {
 			return new PPUser(response.getString("sub"), response.getString("email")); 		// sub is the unique user ID
 			
 		} catch (IOException | JSONException e) {
-			Log.log("Could not grab user info with access token; please attempt refresh token", Log.INFO);
+			Log.log("Could not grab user info with access token; attempt refresh token", Log.INFO);
 		} catch (URISyntaxException e) {// indicates some sort of internal error
 			Log.log("Invalid Yahoo URL provided! Please report this error", Log.ERROR);
 		} 

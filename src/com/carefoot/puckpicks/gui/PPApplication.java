@@ -4,12 +4,15 @@ import java.awt.Taskbar;
 import java.awt.Taskbar.Feature;
 import java.awt.Toolkit;
 
+import com.carefoot.puckpicks.authentication.AuthenticationHandler;
 import com.carefoot.puckpicks.data.paths.FilePath;
+import com.carefoot.puckpicks.gui.components.PPTaskbar;
 import com.carefoot.puckpicks.gui.scenes.LoadingScene;
 import com.carefoot.puckpicks.gui.scenes.PPScene;
 import com.carefoot.puckpicks.main.PuckPicks;
 
 import javafx.application.Platform;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
@@ -26,6 +29,7 @@ public class PPApplication {
 	private final LoadingScene loading;
 	private final StateManager stateManager; 	// StateManager for logging scenes and going back in app
 	private final PPTaskbar taskbar; 	// taskbar at top of application
+	private final AuthenticationHandler authHandler;
 	private PPScene current;
 	
 	public PPApplication(Stage stage) {
@@ -35,6 +39,7 @@ public class PPApplication {
 		taskbar = new PPTaskbar();
 		stateManager = new StateManager();
 		loading = new LoadingScene();
+		authHandler = new AuthenticationHandler();
 
 		/* Constructing loading scene and enabling until first scene is set */
 		loading.build();
@@ -128,6 +133,15 @@ public class PPApplication {
 	}
 	
 	/**
+	 * Adds a node to the top of the current scene's StackPane.
+	 * (If the scene is changed, this node is lost).
+	 * @param node Node to add
+	 */
+	public void addNodeToScene(Node node) {
+		current.addNode(node);
+	}
+	
+	/**
 	 * Returns true if there is a previous state currently available within the StateManager
 	 * (i.e if there is somewhere a back arrow can take you)
 	 * @param current The current PPScene instance
@@ -171,6 +185,14 @@ public class PPApplication {
 	 */
 	public PPTaskbar getTaskbar() {
 		return taskbar;
+	}
+	
+	/**
+	 * Gets the application AuthenticationHandler instance
+	 * @return AuthenticationHandler object
+	 */
+	public AuthenticationHandler getAuthHandler() {
+		return authHandler;
 	}
 	
 	/**

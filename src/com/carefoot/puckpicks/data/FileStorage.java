@@ -69,8 +69,10 @@ public abstract class FileStorage {
 	private static void writeFile(List<String> contents, String path) {
 		try (BufferedWriter writer = new BufferedWriter(new FileWriter(path))) {
 			for (String line : contents) {
-				writer.write(line);
-				writer.newLine();
+				if (line != null) {
+					writer.write(line);
+					writer.newLine();
+				}
 			}
 
 			writer.close();  	// close the BufferedWriter

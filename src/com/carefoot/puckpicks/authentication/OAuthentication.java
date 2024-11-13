@@ -40,9 +40,8 @@ public class OAuthentication {
 	/**
 	 * Initialize a new OAuthentication.
 	 * Submits/Transmits HTTP requests (could be handled asychronously)
-	 * @throws IOException
-	 * @throws URISyntaxException
-	 * @throws NoSuchAlgorithmException 
+	 * @throws PPServerException
+	 * @throws NoSuchAlgorithmException
 	 */
 	public OAuthentication(AuthenticationHandler authHandler) throws PPServerException, NoSuchAlgorithmException {
 		/* retrieve oauth information from server */
