@@ -60,7 +60,7 @@ public class MainMenu extends PPScene {
 		/*
 		 * Add all buttons below here
 		 */
-		addButtonToGrid("Leaderboards", new Leaderboard(), 0, 0);
+		addButtonToGrid("NHL Leaderboards", new Leaderboard(), 0, 0);
 	}
 	
 	/**

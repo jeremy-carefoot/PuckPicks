@@ -11,14 +11,26 @@ import java.util.HashMap;
  */
 public abstract class DataRequest {
 	
+	/**
+	 * Connection Type for HTTP request 
+	 */
 	public enum ConnectionType {
 		GET, POST;
+	}
+	
+	/**
+	 * Raw format of the HTTP response
+	 * Only JSON/XML currently supported
+	 */
+	public enum ResponseFormat {
+		JSON, XML;
 	}
 	
 	public static final int DEFAULT_LIMIT = 5; 		// for requests involving multiple elements; this is the default fetched limit
 	
 	private HashMap<String, String> headers;
 	private ConnectionType type;
+	private ResponseFormat responseFormat;
 	private String baseUrl;
 	
 	/**
@@ -33,6 +45,7 @@ public abstract class DataRequest {
 			baseUrl += '/';
 
 		type = ConnectionType.GET;
+		responseFormat = ResponseFormat.JSON;
 		this.baseUrl = baseUrl;
 		this.headers = new HashMap<>();
 	}
@@ -49,9 +62,18 @@ public abstract class DataRequest {
 		if (baseUrl.charAt(baseUrl.length()-1) != '/')
 			baseUrl += '/';
 
+		responseFormat = ResponseFormat.JSON;
 		this.type = type;
 		this.baseUrl = baseUrl;
 		this.headers = new HashMap<>();
+	}
+
+	/**
+	 * Set the HTTP raw response format
+	 * @param format ResponseFormat as enum value
+	 */
+	public void setResponseFormat(ResponseFormat format) {
+		responseFormat = format;
 	}
 	
 	/**
@@ -76,6 +98,14 @@ public abstract class DataRequest {
 	 */
 	public ConnectionType getConnectionType() {
 		return type;
+	}
+	
+	/**
+	 * Get the format of the raw HTTP response 
+	 * @return HTTP response format enum value
+	 */
+	public ResponseFormat getResponseFormat() {
+		return responseFormat;
 	}
 	
 	/**

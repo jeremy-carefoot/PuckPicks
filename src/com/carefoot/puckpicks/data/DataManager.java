@@ -9,8 +9,10 @@ import java.net.URL;
 import java.util.Map.Entry;
 
 import org.json.JSONObject;
+import org.json.XML;
 
 import com.carefoot.puckpicks.data.DataRequest.ConnectionType;
+import com.carefoot.puckpicks.data.DataRequest.ResponseFormat;
 import com.carefoot.puckpicks.main.PuckPicks;
 
 /**
@@ -57,9 +59,13 @@ public class DataManager {
 		String raw_response = PuckPicks.readInputStream(connection.getInputStream());
 
 		if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-			response  = new JSONObject(raw_response);
+			/* parse response into JSON using appropriate protocol*/
+			if (req.getResponseFormat() == ResponseFormat.XML)
+				response = XML.toJSONObject(raw_response);
+			else
+				response  = new JSONObject(raw_response);
 		} else {
-			throw new IOException(connection.getResponseMessage()); 		// TODO add a custom exception for better handling here
+			throw new IOException(connection.getResponseMessage()); 		
 		}
 		
 		return response;

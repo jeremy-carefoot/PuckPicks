@@ -11,8 +11,8 @@ import org.json.JSONObject;
 import com.carefoot.puckpicks.data.AsyncTaskQueue;
 import com.carefoot.puckpicks.data.DataManager;
 import com.carefoot.puckpicks.data.DataRequest;
-import com.carefoot.puckpicks.data.requests.GoalieRequest;
-import com.carefoot.puckpicks.data.requests.SkaterRequest;
+import com.carefoot.puckpicks.data.requests.NHLGoalieRequest;
+import com.carefoot.puckpicks.data.requests.NHLSkaterRequest;
 import com.carefoot.puckpicks.gui.PPAnimation;
 import com.carefoot.puckpicks.gui.PPGui;
 import com.carefoot.puckpicks.main.Log;
@@ -183,8 +183,8 @@ public class Leaderboard extends PPScene {
 		categorySelect.setOnAction(null); 		
 
 		categorySelect.getItems().clear();
-		categorySelect.getItems().addAll(displayPlayers ? SkaterRequest.categories() : GoalieRequest.categories());
-		categorySelect.setValue(displayPlayers ? SkaterRequest.DEFAULT_CATEGORY : GoalieRequest.DEFAULT_CATEGORY);
+		categorySelect.getItems().addAll(displayPlayers ? NHLSkaterRequest.categories() : NHLGoalieRequest.categories());
+		categorySelect.setValue(displayPlayers ? NHLSkaterRequest.DEFAULT_CATEGORY : NHLGoalieRequest.DEFAULT_CATEGORY);
 
 		categorySelect.setOnAction(action); 		// re-enable action event
 	}
@@ -230,7 +230,7 @@ public class Leaderboard extends PPScene {
 		List<HBox> list = new ArrayList<>();
 		JSONObject players;
 		try {// attempt to grab data
-			players = DataManager.submitRequest(displayPlayers ? new SkaterRequest(category, limit) : new GoalieRequest(category, limit));
+			players = DataManager.submitRequest(displayPlayers ? new NHLSkaterRequest(category, limit) : new NHLGoalieRequest(category, limit));
 		} catch (Exception e) {
 			/*
 			 * If there is an error, return the list with an error message and log
@@ -242,7 +242,7 @@ public class Leaderboard extends PPScene {
 
 		int rank = 1;
 		for (HashMap<String, String> player : displayPlayers ? 
-				SkaterRequest.parseJSONResponse(players) : GoalieRequest.parseJSONResponse(players, category)) {// parse JSON response use appropriate method 
+				NHLSkaterRequest.parseJSONResponse(players) : NHLGoalieRequest.parseJSONResponse(players, category)) {// parse JSON response use appropriate method 
 			HBox hbox = buildSkaterElement(player, category, rank);
 			list.add(hbox);
 			rank++;

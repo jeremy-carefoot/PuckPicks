@@ -15,7 +15,7 @@ import com.carefoot.puckpicks.main.PuckPicks;
  * Request to NHL API to grab Goalie Leaders with provided parameters
  * @author jeremycarefoot
  */
-public class GoalieRequest extends DataRequest {
+public class NHLGoalieRequest extends DataRequest {
 	
 	public static final String DEFAULT_CATEGORY = "Wins"; 
 
@@ -31,22 +31,22 @@ public class GoalieRequest extends DataRequest {
 	 * All constructors below
 	 */
 	
-	public GoalieRequest() {
+	public NHLGoalieRequest() {
 		super(NHLUrlPath.getBaseUrl());
 		subUrl = getGoalieSubUrl(DEFAULT_CATEGORY, DEFAULT_LIMIT);
 	}
 
-	public GoalieRequest(int limit) {
+	public NHLGoalieRequest(int limit) {
 		super(NHLUrlPath.getBaseUrl());
 		subUrl = getGoalieSubUrl(DEFAULT_CATEGORY, limit);
 	}
 
-	public GoalieRequest(String category) {
+	public NHLGoalieRequest(String category) {
 		super(NHLUrlPath.getBaseUrl());
 		subUrl = getGoalieSubUrl(category, DEFAULT_LIMIT);
 	}
 
-	public GoalieRequest(String category, int limit) {
+	public NHLGoalieRequest(String category, int limit) {
 		super(NHLUrlPath.getBaseUrl());
 		subUrl = getGoalieSubUrl(category, limit);
 	}
@@ -74,7 +74,7 @@ public class GoalieRequest extends DataRequest {
 	 * @return List of HashMaps where each HashMap corresponds to a different goalie
 	 */
 	public static List<HashMap<String, String>> parseJSONResponse(JSONObject parse, String category) {
-		List<HashMap<String, String>> output = SkaterRequest.parseJSONResponse(parse);
+		List<HashMap<String, String>> output = NHLSkaterRequest.parseJSONResponse(parse);
 		
 		if (CATEGORIES.get(category) == "savePctg") {// if we are parsing goalies sorted by save %
 			/*

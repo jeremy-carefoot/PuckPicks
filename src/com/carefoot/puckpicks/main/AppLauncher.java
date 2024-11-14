@@ -1,8 +1,18 @@
 package com.carefoot.puckpicks.main;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
+
+import org.json.JSONObject;
+
+import com.carefoot.puckpicks.data.DataManager;
 import com.carefoot.puckpicks.data.FileStorage;
+import com.carefoot.puckpicks.data.exceptions.NotAuthenticatedException;
+import com.carefoot.puckpicks.data.exceptions.PPServerException;
+import com.carefoot.puckpicks.data.paths.YahooUrlPath;
+import com.carefoot.puckpicks.data.requests.YahooFantasyRequest;
+import com.carefoot.puckpicks.data.requests.fantasy.LeagueCollection;
 import com.carefoot.puckpicks.gui.PPApplication;
-import com.carefoot.puckpicks.gui.scenes.Account;
 import com.carefoot.puckpicks.gui.scenes.MainMenu;
 
 import javafx.application.Application;
@@ -23,7 +33,7 @@ public class AppLauncher extends Application {
 		app = new PPApplication(stage); 	// create new PuckPicks application wrapper class
 		app.open();
 		app.setScene(new MainMenu(), false); 	// present user with main menu on application start
-//		debug();
+		debug();
 	}
 	
 	// JavaFX stop method
@@ -45,7 +55,18 @@ public class AppLauncher extends Application {
 	
 	// TODO delete for prod
 	private void debug() {
-		app.setScene(new Account(), false);
-}
+		try {
+			System.out.println(new LeagueCollection());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NotAuthenticatedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (PPServerException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 
 }

@@ -99,6 +99,14 @@ public class AuthenticationHandler {
 	}
 	
 	/**
+	 * Get the stored OAuthentication access token
+	 * @return Auth token
+	 */
+	public String getAuthToken() {
+		return tokens.getAuthToken();
+	}
+	
+	/**
 	 * Sign a user out of their Yahoo account (delete authentication information)
 	 */
 	public void signOut() {

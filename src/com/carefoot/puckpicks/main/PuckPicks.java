@@ -7,6 +7,8 @@ import java.io.InputStreamReader;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.json.JSONObject;
+
 import com.carefoot.puckpicks.data.paths.FilePath;
 
 /**
@@ -85,6 +87,23 @@ public class PuckPicks {
 		}
 		
 		return output.toString();
+	}
+	
+	/**
+	 * Navigate and grab a value from a JSONObject using dot notation.
+	 * Handy for deeply nested JSONs
+	 * @param json JSONObject to navigate
+	 * @param path Path using dots to indicate levels (e.g "accounts.user1.email")
+	 * @return Object/value found at end of path
+	 */
+	public static Object dotNotation(JSONObject json, String path) {
+		int nextDot;
+		while ((nextDot = path.indexOf('.')) > -1) {
+			json = json.getJSONObject(path.substring(0, nextDot)); 	// get next JSONObject
+			path = path.substring(nextDot+1); 		// update remainder of path
+		}
+
+		return json.get(path);
 	}
 	
 }

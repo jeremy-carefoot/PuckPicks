@@ -13,7 +13,7 @@ import com.carefoot.puckpicks.data.DataRequest;
 import com.carefoot.puckpicks.data.paths.NHLUrlPath;
 import com.carefoot.puckpicks.main.PuckPicks;
 
-public class SkaterRequest extends DataRequest {
+public class NHLSkaterRequest extends DataRequest {
 	
 	public static final String DEFAULT_CATEGORY = "Points";
 	
@@ -29,22 +29,22 @@ public class SkaterRequest extends DataRequest {
 	 * All constructors below
 	 */
 
-	public SkaterRequest() {
+	public NHLSkaterRequest() {
 		super(NHLUrlPath.getBaseUrl());
 		subUrl = getSkaterSubUrl(DEFAULT_CATEGORY, DEFAULT_LIMIT);
 	}
 	
-	public SkaterRequest(int limit) {
+	public NHLSkaterRequest(int limit) {
 		super(NHLUrlPath.getBaseUrl());
 		subUrl = getSkaterSubUrl(DEFAULT_CATEGORY, limit);
 	}
 
-	public SkaterRequest(String category) {
+	public NHLSkaterRequest(String category) {
 		super(NHLUrlPath.getBaseUrl());
 		subUrl = getSkaterSubUrl(category, DEFAULT_LIMIT);
 	}
 	
-	public SkaterRequest(String category, int limit) {
+	public NHLSkaterRequest(String category, int limit) {
 		super(NHLUrlPath.getBaseUrl());
 		subUrl = getSkaterSubUrl(category, limit);
 	}

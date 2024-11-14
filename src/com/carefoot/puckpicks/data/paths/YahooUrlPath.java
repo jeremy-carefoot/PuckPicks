@@ -7,9 +7,11 @@ package com.carefoot.puckpicks.data.paths;
 public enum YahooUrlPath {
 	
 	USER_INFO("openid/v1/userinfo"), 
-	HOST_DOMAIN("api.login.yahoo.com");
-
-	private static final String BASE_URL = "https://api.login.yahoo.com/";
+	GET_LEAGUE_LIST("users;use_login=1/games;game_key=nhl/leagues"),
+	FANTASY_API_URL("https://fantasysports.yahooapis.com/fantasy/v2"),
+	LOGIN_DOMAIN("api.login.yahoo.com"),
+	LOGIN_URL("https://api.login.yahoo.com/");	
+	
 	private String path;
 	
 	private YahooUrlPath(String path) {
@@ -18,10 +20,6 @@ public enum YahooUrlPath {
 	
 	public String toString() {
 		return path;
-	}
-	
-	public static String getBaseURL() {
-		return BASE_URL;
 	}
 
 }

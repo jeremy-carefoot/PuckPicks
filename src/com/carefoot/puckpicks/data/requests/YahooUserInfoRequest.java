@@ -14,9 +14,9 @@ public class YahooUserInfoRequest extends DataRequest {
 	 * @param authToken OAuthentication token to use to get the user information
 	 */
 	public YahooUserInfoRequest(String authToken) {
-		super(YahooUrlPath.getBaseURL());
+		super(YahooUrlPath.LOGIN_URL.toString());
 		addHeader("Authorization", "Bearer " + authToken); 		// add authentication header
-		addHeader("Host", YahooUrlPath.HOST_DOMAIN.toString());
+		addHeader("Host", YahooUrlPath.LOGIN_DOMAIN.toString());
 	}
 
 	@Override
