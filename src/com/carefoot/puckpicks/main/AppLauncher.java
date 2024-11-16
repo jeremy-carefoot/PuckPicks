@@ -1,17 +1,14 @@
 package com.carefoot.puckpicks.main;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
+import java.util.Arrays;
 
-import org.json.JSONObject;
-
-import com.carefoot.puckpicks.data.DataManager;
 import com.carefoot.puckpicks.data.FileStorage;
 import com.carefoot.puckpicks.data.exceptions.NotAuthenticatedException;
 import com.carefoot.puckpicks.data.exceptions.PPServerException;
-import com.carefoot.puckpicks.data.paths.YahooUrlPath;
-import com.carefoot.puckpicks.data.requests.YahooFantasyRequest;
+import com.carefoot.puckpicks.data.requests.fantasy.League;
 import com.carefoot.puckpicks.data.requests.fantasy.LeagueCollection;
+import com.carefoot.puckpicks.data.requests.fantasy.PlayerCollection;
 import com.carefoot.puckpicks.gui.PPApplication;
 import com.carefoot.puckpicks.gui.scenes.MainMenu;
 
@@ -56,7 +53,9 @@ public class AppLauncher extends Application {
 	// TODO delete for prod
 	private void debug() {
 		try {
-			System.out.println(new LeagueCollection());
+			League[] leagues = new LeagueCollection().array();
+			PlayerCollection test = new PlayerCollection(leagues[0].getLeagueKey(), "status=A;sort=PTS");
+			System.out.println(Arrays.toString(test.array()));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

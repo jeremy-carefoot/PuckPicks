@@ -35,6 +35,26 @@ public class YahooFantasyRequest extends DataRequest {
 		}
 	}
 
+	/**
+	 * Create a new Fantasy API request
+	 * @param authHandler AuthenticationHandler for current session
+	 * @param subUrl subURL endpoint of the request
+	 * @throws NotAuthenticatedException If the user could not be authenticated
+	 * @throws PPServerException If the PuckPicks server cannot be reached for validation
+	 */
+	public YahooFantasyRequest(AuthenticationHandler authHandler, String subUrl) throws NotAuthenticatedException, PPServerException {
+		super(YahooUrlPath.FANTASY_API_URL.toString());
+		setResponseFormat(ResponseFormat.XML);
+		this.subUrl = subUrl;
+		
+		/* verify authentication */
+		if (authHandler.isLoggedIn() != null ) {
+			addHeader("Authorization", "Bearer " + authHandler.getAuthToken());
+		} else {
+			throw new NotAuthenticatedException();
+		}
+	}
+
 	@Override
 	public String requestSubUrl() {
 		return subUrl;

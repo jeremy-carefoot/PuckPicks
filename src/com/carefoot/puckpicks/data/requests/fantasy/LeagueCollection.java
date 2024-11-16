@@ -50,28 +50,27 @@ public class LeagueCollection {
 	}
 	
 	/**
-	 * String representation
-	 */
-	public String toString() {
-		String output = "[";
-		for (int i = 0; i < leagues.length; i++)
-			output += leagues[i].toString() + (i < leagues.length-1 ? ", " : "");
-		return output + "]";
-	}
-	
-	/**
 	 * Parse JSON response from API into League array
 	 * @param response JSON API response
-	 * @return Array of leagues
+	 * @return Array of leagues (null of no valid leagues)
 	 */
 	private League[] parseRequestResponse(JSONObject response) {
 		JSONArray seasons = (JSONArray) PuckPicks.dotNotation(response, "fantasy_content.users.user.games.game");
-		JSONObject recentSeason = seasons.getJSONObject(seasons.length()-1); 	// most recent season is the last index in JSONarray
+
+		/* In case there is no leagues*/
+		if (seasons.length() == 0)
+			return null; 
+
+		JSONObject recentSeason = seasons.getJSONObject(seasons.length()-1); 	// most recent season is the last index in JSONArray
 		JSONArray leagues = (JSONArray) PuckPicks.dotNotation(recentSeason, "leagues.league");
 		
 		League[] output = new League[ leagues.length() ];
 		for (int i = 0; i < output.length; i++) {
 			JSONObject o = leagues.getJSONObject(i);
+			
+			/* check to ensure the league is still active */
+			if(!o.isNull("is_finished") && o.getInt("is_finished") == 1)
+				continue;
 
 			/* Create new league object from JSON data */
 			output[i] = new League(

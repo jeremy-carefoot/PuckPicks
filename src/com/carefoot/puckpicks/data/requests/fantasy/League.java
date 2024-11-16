@@ -47,24 +47,31 @@ public class League {
 	public int getEndWeek() {
 		return endWeek;
 	}
+
 	public int getCurrentWeek() {
 		return currentWeek;
 	}
+
 	public int getTeamCount() {
 		return teamCount;
 	}
+
 	public int getLeagueId() {
 		return leagueId;
 	}
+
 	public String getName() {
 		return name;
 	}
+
 	public String getLeagueKey() {
 		return leagueKey;
 	}
+
 	public String getLogoURL() {
 		return logoURL;
 	}
+
 	public LeagueTier getTier() {
 		return tier;
 	}
