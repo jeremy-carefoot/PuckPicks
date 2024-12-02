@@ -42,8 +42,12 @@ public class League {
 		this.teamCount = teamCount;
 		this.currentWeek = currentWeek;
 		this.endWeek = endWeek;
+	}	
+
+	public String toString() {
+		return "{name: " + name + ", league_key: " + leagueKey + "}";
 	}
-	
+
 	public int getEndWeek() {
 		return endWeek;
 	}
@@ -74,10 +78,6 @@ public class League {
 
 	public LeagueTier getTier() {
 		return tier;
-	}
-	
-	public String toString() {
-		return "{name: " + name + ", league_key:" + leagueKey + "}";
 	}
 
 }

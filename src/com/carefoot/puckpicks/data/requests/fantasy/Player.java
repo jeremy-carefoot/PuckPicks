@@ -35,6 +35,21 @@ public class Player {
 		this.teamKey = teamKey;
 		this.positions = EnumSet.copyOf(Arrays.asList(positions));
 	}
+		
+	/**
+	 * Parse a string of positions into a Position enum array
+	 * @param positions String to parse
+	 * @return Array of Position enum
+	 */
+	public static Position[] parsePositions(String positions) {
+		String[] split = positions.split(",");
+		Position[] output = new Position[ split.length ];
+
+		for (int i = 0; i < split.length; i++)
+			output[i] = Position.valueOf(split[i]);
+		
+		return output;
+	}
 	
 	public String toString() {
 		return "{name: " + name + ", " + "team: " + teamAbbreviation + ", positions: " + positions.toString() + "}";

@@ -14,51 +14,42 @@ import com.carefoot.puckpicks.data.requests.YahooFantasyRequest;
 import com.carefoot.puckpicks.main.PuckPicks;
 
 /**
- * Wrapper class for fetching players from the Yahoo Fantasy API
+ * Yahoo Fantasy Roster object
+ * Similar to a PlayerCollection, but allows data to be obtained for a specific teamKey
  * @author jeremycarefoot
  */
-public class PlayerCollection extends YahooCollection<Player> {
+public class Roster extends YahooCollection<Player> {
 	
-	private String leagueId;
-
+	private String teamKey;
+	
 	/**
-	 * Fetch a collection of players from the provided league (with provided filters). <br> 
-	 * <br
-	 * <b>Known Filters:</b>
-	 * <ul>
-	 *<li>count (int) - # of players to retrieve (maximum 25) </li> 
-	 *<li>start (int) - given filtered context, the numbered position to start retrieving the count of players</li>
-	 *<li>status (string) - status of players (e.g A for available)</li>
-	 *<li>sort (string) - method of sorting (e.g AR for actual fantasy rank)</li>
-	 * </ul> 
-	 * @param leagueId
-	 * @param filter
-	 * @throws IOException
+	 * Get the roster (player collection) of the provided team by team key
+	 * @param teamKey Team to fetch players from
 	 * @throws PPServerException
 	 * @throws NotAuthenticatedException
+	 * @throws IOException
 	 */
-	public PlayerCollection(String leagueId, String filter) throws IOException, PPServerException, NotAuthenticatedException {
-		String subUrl = YahooUrlPath.GET_PLAYERS_BY_LEAGUE.toString().replace("{leagueid}", leagueId) + ";" + filter;
-		this.leagueId =  leagueId;
-
+	public Roster(String teamKey) throws PPServerException, NotAuthenticatedException, IOException {
+		String subUrl = YahooUrlPath.GET_PLAYERS_BY_TEAM.toString().replace("{teamid}", teamKey);
+		this.teamKey = teamKey;
+		
 		try {
 			JSONObject response = DataManager.submitRequest(new YahooFantasyRequest(handler, subUrl));
 			parseRequestResponse(response);
-		} catch (URISyntaxException e) {
-			e.printStackTrace(); 		// internal error
+		} catch(URISyntaxException e) {
+			e.printStackTrace(); 		// unchecked internal error
 		}
 	}
 	
-	public String getLeagueId() {
-		return leagueId;
+	public String getTeamKey() {
+		return teamKey;
 	}
-
+	
 	private void parseRequestResponse(JSONObject response) {
-		JSONArray players = (JSONArray) PuckPicks.dotNotation(response, "fantasy_content.league.players.player");
+		JSONArray players =  (JSONArray) PuckPicks.dotNotation(response, "fantasy_content.team.roster.players.player");
 		
 		for (int i = 0; i < players.length(); i++) {
 			JSONObject o = players.getJSONObject(i);
-
 			Player player = new Player(
 					(String) PuckPicks.dotNotation(o, "name.full"),
 					o.getString("player_key"),
@@ -72,4 +63,5 @@ public class PlayerCollection extends YahooCollection<Player> {
 			addContent(player);
 		}
 	}
+
 }
