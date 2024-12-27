@@ -33,6 +33,10 @@ public class Team {
 	public String getTeamKey() {
 		return teamKey;
 	}
+	
+	public String getLeagueKey() {
+		return teamKey.split(".t.")[0]; 		// extract league key from entire team key 
+	}
 
 	public int getTeamId() {
 		return teamId;

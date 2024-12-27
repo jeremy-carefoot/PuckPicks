@@ -40,6 +40,14 @@ public abstract class YahooCollection<T> {
 	}
 	
 	/**
+	 * Get the size of the array (number of elements)
+	 * @return size
+	 */
+	public int size() {
+		return array.size();
+	}
+	
+	/**
 	 * Fetch ArrayList of contents
 	 * @return
 	 */

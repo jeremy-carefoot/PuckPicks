@@ -41,8 +41,24 @@ public class Roster extends YahooCollection<Player> {
 		}
 	}
 	
+	/**
+	 * Get a comma separated list of all contained players' keys
+	 * @return Comma separated list
+	 */
+	public String[] getPlayerKeys() {
+		String[] playerKeys = super.getContent().stream()
+				.map(Player::getPlayerKey)
+				.toArray(String[]::new); 	// functionally gets player key from every Player and stores in String[] array
+		
+		return playerKeys;		
+	}
+	
 	public String getTeamKey() {
 		return teamKey;
+	}
+
+	public String getLeagueKey() {
+		return teamKey.split(".t.")[0]; 		// extract league key from entire team key 
 	}
 	
 	private void parseRequestResponse(JSONObject response) {

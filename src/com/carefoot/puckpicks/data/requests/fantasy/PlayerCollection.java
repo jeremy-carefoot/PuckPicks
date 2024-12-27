@@ -23,7 +23,7 @@ public class PlayerCollection extends YahooCollection<Player> {
 
 	/**
 	 * Fetch a collection of players from the provided league (with provided filters). <br> 
-	 * <br
+	 * <br>
 	 * <b>Known Filters:</b>
 	 * <ul>
 	 *<li>count (int) - # of players to retrieve (maximum 25) </li> 

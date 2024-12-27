@@ -5,6 +5,7 @@ import java.io.IOException;
 import com.carefoot.puckpicks.data.FileStorage;
 import com.carefoot.puckpicks.data.exceptions.NotAuthenticatedException;
 import com.carefoot.puckpicks.data.exceptions.PPServerException;
+import com.carefoot.puckpicks.data.requests.fantasy.PlayerStatCollection;
 import com.carefoot.puckpicks.data.requests.fantasy.Roster;
 import com.carefoot.puckpicks.data.requests.fantasy.TeamCollection;
 import com.carefoot.puckpicks.gui.PPApplication;
@@ -53,7 +54,8 @@ public class AppLauncher extends Application {
 		try {
 			TeamCollection teams = new TeamCollection();
 			Roster roster = new Roster(teams.get(0).getTeamKey());
-			System.out.println(roster);
+			PlayerStatCollection stats = new PlayerStatCollection(roster.getLeagueKey(), "2024-12-18", roster.getPlayerKeys());
+			System.out.println(stats);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

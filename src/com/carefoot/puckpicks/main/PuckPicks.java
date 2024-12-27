@@ -106,4 +106,19 @@ public class PuckPicks {
 		return json.get(path);
 	}
 	
+	/**
+	 * Takes an array of String elements and returns a comma separated list
+	 * @param elements Elements for list
+	 * @return Comma separated list as String
+	 */
+	public static String commaSeparatedList(String[] elements) {
+		String output = "";
+
+		for (int i = 0; i < elements.length; i++) {
+			output += elements[i] + (i != elements.length-1 ? "," : "");
+		}
+		
+		return output;
+	}
+	
 }
