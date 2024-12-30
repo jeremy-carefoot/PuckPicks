@@ -103,7 +103,7 @@ public class AccountMenu {
 				}
 
 			} catch (PPServerException e) {// can't communicate with PuckPicks server
-				loadErrorMessage("Error communicating with PuckPicks server\n(servers may be undergoing maintenance)");
+				loadErrorMessage(PPServerException.displayErrorTitle + "\n" + PPServerException.displayErrorSubtitle);
 			}
 		}).start();
 	}
@@ -181,7 +181,7 @@ public class AccountMenu {
 				Platform.runLater(() -> openLoginWindow(oauth));
 
 			} catch (PPServerException e) {
-				loadErrorMessage("Error communicating with PuckPicks server\n(servers may be undergoing maintenance)");
+				loadErrorMessage(PPServerException.displayErrorTitle + "\n" + PPServerException.displayErrorSubtitle);
 			} catch (NoSuchAlgorithmException e) {
 				loadErrorMessage("Internal error: " + e.getMessage());
 			}		

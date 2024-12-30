@@ -5,6 +5,8 @@ import com.carefoot.puckpicks.gui.PPAnimation;
 import com.carefoot.puckpicks.gui.PPGui;
 import com.carefoot.puckpicks.main.AppLauncher;
 
+import javafx.geometry.HPos;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
@@ -61,6 +63,7 @@ public class MainMenu extends PPScene {
 		 * Add all buttons below here
 		 */
 		addButtonToGrid("NHL Leaderboards", new Leaderboard(), 0, 0);
+		addButtonToGrid("Team Analyzer", new TeamAnalyzer(), 1, 0);
 	}
 	
 	/**
@@ -77,6 +80,8 @@ public class MainMenu extends PPScene {
 		button.setOnAction((e) -> {
 			AppLauncher.getApp().setScene(loadScene, false);
 		});
+		GridPane.setMargin(button, new Insets(5));
+		GridPane.setHalignment(button, HPos.CENTER);
 		buttons.add(button, column, row);
 	}
 

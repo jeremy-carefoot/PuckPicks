@@ -9,6 +9,7 @@ import java.util.HashMap;
 public class PlayerStat {	
 
 	private String playerKey;
+	private boolean leagueContext;
 	private HashMap<Integer, Double> stats;
 	
 	/**
@@ -17,6 +18,18 @@ public class PlayerStat {
 	 */
 	public PlayerStat(String playerKey) {
 		this.playerKey = playerKey;
+		this.leagueContext = false;
+		stats = new HashMap<>();
+	}
+
+	/**
+	 * Create a new PlayerStat object
+	 * @param playerKey Yahoo Player key
+	 * @param leagueContext whether these stats are in context of a specific fantasy league
+	 */
+	public PlayerStat(String playerKey, boolean leagueContext) {
+		this.playerKey = playerKey;
+		this.leagueContext = leagueContext;
 		stats = new HashMap<>();
 	}
 	
@@ -33,6 +46,10 @@ public class PlayerStat {
 		return playerKey;
 	}
 	
+	public boolean isLeagueContext() {
+		return leagueContext;
+	}
+	
 	/**
 	 * Get HashMap of player stats.
 	 * @return Map of player stats [stat, value]
@@ -42,6 +59,6 @@ public class PlayerStat {
 	}
 	
 	public String toString() {
-		return "{player: " + playerKey + ", " + stats.toString() + "}";
+		return (leagueContext ? "{player (league context):" : "{player: ") + playerKey + ", " + stats.toString() + "}";
 	}
 }

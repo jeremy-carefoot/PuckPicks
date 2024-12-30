@@ -1,13 +1,3 @@
-.title {
-	-fx-font-size: 28px;
-	-fx-fill: -fx-primary;
-	-fx-font-weight: bold;
-}
-
-#title-box {
-	-fx-padding: 20px;
-}
-
 #player-list {
 	-fx-background-color: -fx-gray-bg;
 	-fx-background-insets: 20px;

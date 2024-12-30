@@ -13,6 +13,13 @@
 /*
 * Default Text Profiles
 */
+
+.title-text {
+	-fx-font-size: 28px;
+	-fx-fill: -fx-primary;
+	-fx-font-weight: bold;
+}
+
 .h1{
 	-fx-font-size: 18px;
 	-fx-fill: -fx-primary;
@@ -115,6 +122,13 @@
 	-fx-font-size: 18px;
 }
 
+.small-button {
+	-fx-background-color: -fx-primary;
+	-fx-background-radius: 10px;
+	-fx-padding: 5px 8px;
+	-fx-font-size: 12px;
+}
+
 /*
 * Taskbar
 */
@@ -124,6 +138,14 @@
 
 .taskbar-account-icon {
 	-fx-padding: 10px 10px 0 0;
+}
+
+/*
+* Spacers
+*/
+
+.title-box {
+	-fx-padding: 20px;
 }
 
 /*

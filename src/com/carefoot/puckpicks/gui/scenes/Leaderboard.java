@@ -88,7 +88,7 @@ public class Leaderboard extends PPScene {
 	 */
 	private Parent assembleContent() {	
 		VBox vbox = new VBox();
-		HBox titleSection = buildTitleSection("Leaderboards");
+		HBox titleSection = PPGui.buildTitleSection("Leaderboards");
 		HBox buttonSection = buildButtonSection();
 		HBox dropdownSection = buildDropdownSection();
 		Region spacer1 = PPGui.filler(false, 15);
@@ -96,18 +96,6 @@ public class Leaderboard extends PPScene {
 		
 		vbox.getChildren().addAll(titleSection, buttonSection, spacer1, dropdownSection, spacer2, list);
 		return vbox;
-	}
-	
-	/**
-	 * Builds the top title section 
-	 */
-	private HBox buildTitleSection(String text) {
-		Text title = PPGui.textWithStyle(text, "title");
-		HBox hbox = new HBox();
-		hbox.setAlignment(Pos.CENTER);
-		hbox.setId("title-box");
-		hbox.getChildren().add(title);
-		return hbox;
 	}
 	
 	/**

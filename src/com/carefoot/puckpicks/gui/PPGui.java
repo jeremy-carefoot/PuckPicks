@@ -5,6 +5,8 @@ import java.io.InputStream;
 import com.carefoot.puckpicks.data.paths.FilePath;
 import com.carefoot.puckpicks.main.PuckPicks;
 
+import javafx.geometry.Pos;
+import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
@@ -175,6 +177,35 @@ public class PPGui {
 		iconContainer.getStyleClass().add("cancel-icon");
 		
 		return iconContainer;	
+	}
+
+	/**
+	 * Constructs a spaced title section (intended for top of a page) 
+	 * 
+	 * @param text Title text
+	 */
+	public static HBox buildTitleSection(String text) {
+		Text title = PPGui.textWithStyle(text, "title-text");
+		HBox hbox = new HBox();
+		hbox.setAlignment(Pos.CENTER);
+		hbox.getStyleClass().add("title-box");
+		hbox.getChildren().add(title);
+		return hbox;
+	}
+	
+	/**
+	 * Constructs a small "Try Again" button (intended for an error menu)
+	 * @param action Runnable action to perform on button press
+	 * @return Button node
+	 */
+	public static Button retryButton(Runnable action) {
+		Button button = new Button("Try Again");
+		button.getStyleClass().add("small-button");
+
+		PPAnimation.animateHover(button, 150);
+
+		button.setOnMouseClicked((e) -> action.run());
+		return button;
 	}
 
 }

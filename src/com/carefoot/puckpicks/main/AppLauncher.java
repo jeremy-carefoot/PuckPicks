@@ -10,6 +10,7 @@ import com.carefoot.puckpicks.data.requests.fantasy.Roster;
 import com.carefoot.puckpicks.data.requests.fantasy.TeamCollection;
 import com.carefoot.puckpicks.gui.PPApplication;
 import com.carefoot.puckpicks.gui.scenes.MainMenu;
+import com.carefoot.puckpicks.gui.scenes.TeamAnalyzer;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -29,7 +30,7 @@ public class AppLauncher extends Application {
 		app = new PPApplication(stage); 	// create new PuckPicks application wrapper class
 		app.open();
 		app.setScene(new MainMenu(), false); 	// present user with main menu on application start
-		debug();
+//		debug();
 	}
 	
 	// JavaFX stop method
@@ -51,6 +52,11 @@ public class AppLauncher extends Application {
 	
 	// TODO delete for prod
 	private void debug() {
+		app.setScene(new TeamAnalyzer(), false);
+	}
+	
+	// TODO delete for prod
+	private void debugDataFetch() {
 		try {
 			TeamCollection teams = new TeamCollection();
 			Roster roster = new Roster(teams.get(0).getTeamKey());
