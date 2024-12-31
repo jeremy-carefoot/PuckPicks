@@ -12,7 +12,7 @@ public class Player {
 	/**
 	 * Position enum for valid Player fantasy positions
 	 */
-	enum Position {
+	public enum Position {
 		G, LW, RW, C, D, W;
 	}
 	
@@ -52,7 +52,7 @@ public class Player {
 	}
 	
 	public String toString() {
-		return "{name: " + name + ", " + "team: " + teamAbbreviation + ", positions: " + positions.toString() + "}";
+		return "{name: " + name + ", " + "team: " + teamAbbreviation + ", positions: " + positions.toString() + ", key=" + playerKey + "}";
 	}
 
 	public EnumSet<Position> getPositions() {

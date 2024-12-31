@@ -26,6 +26,7 @@ import com.carefoot.puckpicks.main.PuckPicks;
 public class PlayerStatCollection extends YahooCollection<PlayerStat> {
 	
 	private String leagueKey;
+	private LocalDate date;
 	
 	/**
 	 * Get a collection of player statistics from the provided fantasy league for the provided players (all time)
@@ -38,7 +39,10 @@ public class PlayerStatCollection extends YahooCollection<PlayerStat> {
 	 * @throws NotAuthenticatedException
 	 */
 	public PlayerStatCollection(String leagueKey, String... playerKeys) throws IOException, PPServerException, NotAuthenticatedException {
+		this.date = LocalDate.now();
 		this.leagueKey = leagueKey;
+		
+		/* setup sub-urls for requests */
 		String playerKeyList = PuckPicks.commaSeparatedList(playerKeys);
 		
 		String leagueContextSubUrl = YahooUrlPath.GET_PLAYER_STATS_LEAGUE.toString() 	// sub-url for fetching stats in league context (e.g fantasy points)
@@ -48,7 +52,7 @@ public class PlayerStatCollection extends YahooCollection<PlayerStat> {
 		String generalSubUrl = YahooUrlPath.GET_PLAYER_STATS.toString()		// sub-url for fetching general NHL stats
 				.replace("{players}", playerKeyList);
 		
-		try {
+		try {// submit requests
 			JSONObject leagueResponse = DataManager.submitRequest(new YahooFantasyRequest(handler, leagueContextSubUrl));
 			JSONObject generalResponse = DataManager.submitRequest(new YahooFantasyRequest(handler, generalSubUrl));
 
@@ -71,7 +75,16 @@ public class PlayerStatCollection extends YahooCollection<PlayerStat> {
 	 * @throws NotAuthenticatedException
 	 */
 	public PlayerStatCollection(String leagueKey, String date, String... playerKeys) throws IOException, PPServerException, NotAuthenticatedException {
+		/* attempt to parse provided date and throw error if invalid date provided */
+		String[] parseDate = date.split("-");
+		try {
+			this.date = LocalDate.of(Integer.parseInt(parseDate[0]), Integer.parseInt(parseDate[1]), Integer.parseInt(parseDate[2]));	
+		} catch (NumberFormatException | IndexOutOfBoundsException e) {
+			throw new IllegalArgumentException("Invalid date parameter provided! (Must be formatted YYYY-MM-DD)");
+		}
 		this.leagueKey = leagueKey;
+
+		/* setup sub-urls for requests */
 		String playerKeyList = PuckPicks.commaSeparatedList(playerKeys);
 		
 		String leagueContextSubUrl = YahooUrlPath.GET_PLAYER_STATS_LEAGUE.toString() 	// sub-url for fetching stats in league context (e.g fantasy points)
@@ -83,7 +96,7 @@ public class PlayerStatCollection extends YahooCollection<PlayerStat> {
 				.replace("{players}", playerKeyList)
 				.concat(";type=date;date=" + date);
 		
-		try {
+		try {// submit requests
 			JSONObject leagueResponse = DataManager.submitRequest(new YahooFantasyRequest(handler, leagueContextSubUrl));
 			JSONObject generalResponse = DataManager.submitRequest(new YahooFantasyRequest(handler, generalSubUrl));
 
@@ -162,7 +175,11 @@ public class PlayerStatCollection extends YahooCollection<PlayerStat> {
 	}
 	
 	public String toString() {
-		return "{player_count = " + super.size() + "}";
+		return "{player_count= " + super.size() + ", date= " + date.toString() + "}";
+	}
+	
+	public LocalDate getDate() {
+		return date;
 	}
 	
 	public String getLeagueKey() {

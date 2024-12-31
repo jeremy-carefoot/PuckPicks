@@ -13,3 +13,7 @@
 	-fx-padding: 0px 15px;
 }
 
+.list-cell:odd {
+	-fx-background-color: rgb(100, 100 ,100);
+}
+

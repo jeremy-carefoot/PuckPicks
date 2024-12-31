@@ -196,7 +196,7 @@ public class Leaderboard extends PPScene {
 	 */
 	private void updatePlayerList(String category, int limit) {
 		enableListLoading();	
-		imageRenderer = new AsyncTaskQueue(4);
+		imageRenderer = new AsyncTaskQueue(5);
 		new Thread(() -> {	
 			List<HBox> playerElements = buildPlayerElements(category, limit);
 			imageRenderer.flush(); 	// start rendering images async
@@ -292,7 +292,7 @@ public class Leaderboard extends PPScene {
 		stats.setAlignment(Pos.CENTER);
 		
 		Text cat = PPGui.textWithStyle(category, "h2-dark");
-		Text stat = PPGui.textWithStyle(player.get("value"), "title");
+		Text stat = PPGui.textWithStyle(player.get("value"), "title-text");
 		
 		stats.getChildren().addAll(cat, stat);
 		return stats;
